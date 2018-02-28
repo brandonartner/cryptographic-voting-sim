@@ -1,4 +1,12 @@
 # SecretSharingProject
-Project to implement a secret sharing application.
+Project to implement a secret sharing web application using Ruby on Rails.
 
-Currently does not always output correctly.
+Project Status: Currently implementing the web interface.
+
+TO DO:
+
+	* Implement voting functionality
+		- Implement Nevile's Polynomial Interpolation
+		- Implement voting process (Start/Stop/Timer)
+	* Implement organization creation and functionalities
+	
