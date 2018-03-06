@@ -29,8 +29,8 @@ ActiveRecord::Schema.define(version: 20180219004731) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.string "name"
-    t.text "body"
+    t.string "title"
+    t.text "text"
     t.integer "voter_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
