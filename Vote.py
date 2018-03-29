@@ -1,5 +1,5 @@
 from fractions import Fraction
-from Crypto.PublicKey import DSA
+from Crypto.PublicKey import RSA
 from Crypto.Util import number
 
 
@@ -13,8 +13,10 @@ class Voter:
 			n: total number of keys for the voter
 			k: the required number of votes
 			prime_size: number of bits for the prime number, default:1024
+							Must be a multiple of 64
 		'''
-		self.p = number.getStrongPrime(prime_size,false_positive_prob=1e-10)
+		self.prime_size = prime_size #number.getStrongPrime(prime_size,false_positive_prob=1e-10)
+		self.p = None
 		self.n = n
 		self.k = k
 		self.values = [[], []]
@@ -24,9 +26,15 @@ class Voter:
 		'''	Generates the private-public key pair, the polynomial, and the keys
 			for this voter
 		'''
-		pass
 
-	def generate_polynomial(self):
+		# Generate the RSA public-private key pair for signing with
+		key = RSA.generate(self.prime_size) 
+		self.p = key.n
+		self.pubKey = key.e
+		poly = generate_polynomial(key.d)
+		return generate_keys(poly)
+
+	def generate_polynomial(self, data):
 		'''	Creates a polynomial of degree k.
 			Return: A kth degree polynomial
 		'''
@@ -89,4 +97,5 @@ class Voter:
 
 
 if __name__ == '__main__':
-	voter = Voter(5)
+	voter = Voter(10,5)
+	keys = voter.generate_scheme()
