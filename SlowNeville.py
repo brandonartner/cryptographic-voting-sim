@@ -32,13 +32,15 @@ class SlowNeville:
                 self.values[idx+1].pop(0)
         
         if len(self.values[0]) == self.k:
-            for i in range(len(self.values)-1):
+            soln = self.values[-1]
+            for i in range(len(self.values)):
                 self.values[i] = []
+            return soln
      
     def firstOrderLag(self, idx):
         j = -1
         i = j - (idx + 1)
-            
+        
         x1 = self.values[0][i]
         x2 = self.values[0][j]
             
