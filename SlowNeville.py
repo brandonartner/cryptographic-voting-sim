@@ -4,10 +4,11 @@ class SlowNeville:
     ''' Incremental implementation of Neville's method
     '''
     
-    def __init__(self, k):
+    def __init__(self, k, p):
         # two empty lists to store x and y
         # values respectively
         self.k = k
+        self.p = p
         self.values = [[], []]
         
     def addKey(self, key):
@@ -24,9 +25,9 @@ class SlowNeville:
                 val = self.firstOrderLag(idx)
                 
                 if idx == len(self.values)-2:
-                    self.values.append([val])
+                    self.values.append([self.find_congruence_with_divisibility(val)])
                 else:
-                    self.values[idx+2].append(val)
+                    self.values[idx+2].append(self.find_congruence_with_divisibility(val))
                     
                 # remove value from 
                 self.values[idx+1].pop(0)
@@ -49,4 +50,19 @@ class SlowNeville:
         
         num = (0-x2)*y1-(0-x1)*y2
         den = x1-x2
+
         return Fraction(num, den)
+
+    def find_congruence_with_divisibility(self, soln):
+
+        num = soln.numerator % self.p
+        den = soln.denominator % self.p
+
+        i = 0
+        z = (self.p*i+num)/den
+
+        while z != int(z):
+            i += 1
+            z = (self.p*i+num)/den
+
+        return int(z)
