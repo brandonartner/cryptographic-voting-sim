@@ -2,7 +2,7 @@
 Project to implement a secret sharing application.
 
 TO DO:
-	- Create a REPL for creating tree structure
+	- Create a REPL for creating tree structure  
 	- Create the Tree object made by the REPL
 	- Figure out exactly how the world works (within the confines of our project)
 		- One master document?
