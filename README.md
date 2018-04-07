@@ -4,13 +4,20 @@ Project to implement a secret sharing web application using Ruby on Rails.
 Project Status: Currently implementing the web interface.
 
 TO DO:
+	- Create a REPL for creating tree structure
+	- Create the Tree object made by the REPL
+	- Figure out exactly how the world works (within the confines of our project)
+		- One master document?
+		- Subdocuments?
 
-	* Implement voting functionality
-		- Implement Nevile's Polynomial Interpolation
-		- Implement voting process (Start/Stop/Timer)
-	* Implement organization creation and functionalities
-	
+A                  B
+M--->M---~--->M---(H)
+|    s        s    |
+|    |        |    v
+|    |        |    ^
+|    |        |    |
+H---PrK      PuK----
+
 Active Branches:
 
-	* Transitioning_Blog_to_Voting_App - for all changes to the blog app code to fit it into the app we are trying to make
-	* ( Isn't created. )Nevilles - for implementing Neville's algorithm
+	- Django_App: Not actually making a Django app but this branch has all the new stuff.s
