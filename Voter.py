@@ -18,7 +18,7 @@ class Voter:
 			prime_size: number of bits for the prime number, default:1024
 							Must be a multiple of 64
 		'''
-		self.prime_size = prime_size 
+		self.prime_size = prime_size
 		self.p = number.getStrongPrime(prime_size,false_positive_prob=1e-10)
 		self.n = n
 		self.k = k
@@ -113,32 +113,42 @@ class Voter:
 
 
 	def add_key_to_signature(self, key):
-		''' Adds given key and feeds forward 
+		''' 
+			Adds given key and feeds forward.
+
+			Returns: soln - when k keys have been submitted, the original data
+							otherwise, None
 		'''
 
-        # splitting the key across first two lists
+		soln = None
+
+		# splitting the key across first two lists
 		self.values[0].append(key[0])
 		self.values[1].append(key[1])
-        
-        # generate the as far forward as possible in the Neville list
-        # ie. if 3 keys have been submitted, 3 entries in the list can be made
+
+		
+		# generate the as far forward as possible in the Neville list
+		# ie. if 3 keys have been submitted, 3 entries in the list can be made
 		for idx, lst in enumerate(self.values[1:]):
 			# for every sublist that has 2 elements, generate the corresponding  LIP
-			if len(lst) == 2:
-				val = self.firstOrderLag(idx)
-
-				if idx == len(self.values)-2:
-					self.values.append([self.find_congruence_with_divisibility(val)])
-				else:
-					self.values[idx+2].append(self.find_congruence_with_divisibility(val))
-
+		    if len(lst) == 2:
+		        val = self.firstOrderLag(idx)
+		        
+		        if idx == len(self.values)-2:
+		            self.values.append([self.find_divisible_congruency(val)])
+		        else:
+		            self.values[idx+2].append(self.find_divisible_congruency(val))
+		            
 				# remove now unnecessary value from current sublist
-				self.values[idx+1].pop(0)
+		        self.values[idx+1].pop(0)
 
-		# if there are k elements, than we are done, delete all but the last element
+		# if there are k elements, than we are done, delete all elements and return the last value
 		if len(self.values[0]) == self.k:
-			for i in range(len(self.values)-1):
-				self.values[i] = []
+		    soln = self.values[-1][0]
+		    for i in range(len(self.values)):
+		        self.values[i] = []
+
+		return soln
 
 	def firstOrderLag(self, idx):
 		j = -1
@@ -155,7 +165,7 @@ class Voter:
 		return Fraction(num, den)
 
 
-	def find_congruence_with_divisibility(self, soln):
+	def find_divisible_congruency(self, soln):
 
 		num = soln.numerator % self.p
 		den = soln.denominator % self.p
