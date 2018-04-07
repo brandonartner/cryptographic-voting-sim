@@ -8,14 +8,14 @@ TO DO:
    - One master document?<br/>
    - Subdocuments?<br/>
 <br/>
-A..................B<br/>
-M--->M---~--->M---(H)<br/>
-|....s........s....|<br/>
-|....|........|....v<br/>
-|....|........|....^<br/>
-|....|........|....|<br/>
-H---PrK......PuK----<br/>
-
+>A..................B<br/>
+>M--->M---~--->M---(H)<br/>
+>|....s........s....|<br/>
+>|....|........|....v<br/>
+>|....|........|....^<br/>
+>|....|........|....|<br/>
+>H---PrK......PuK----<br/>
+<br/>
 Active Branches:<br/>
 <br/>
 - Django_App: Not actually making a Django app but this branch has all the new stuff.s<br/>
