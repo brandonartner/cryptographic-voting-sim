@@ -1,7 +1,5 @@
 # SecretSharingProject
-Project to implement a secret sharing web application using Ruby on Rails.
-
-Project Status: Currently implementing the web interface.
+Project to implement a secret sharing application.
 
 TO DO:
 	- Create a REPL for creating tree structure
