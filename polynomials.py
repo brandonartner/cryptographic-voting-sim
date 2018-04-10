@@ -147,7 +147,33 @@ def decrypt(keys, p):
         
     return find_congruence_with_divisibility(value, p)
 
+def key_to_data(key, p):
+    x, y = key
+    
+    xbin = bin(x)[2:]
+    ybin = bin(y)[2:]
+
+    databin = xbin + ybin
+    data = int(databin, 2)
+
+    return data
+
+def data_to_key(data):
+    databin = bin(data)
+
+    xbin = databin[:len(databin)/2]
+    ybin = databin[len(databin)/2:]
+
+    x = int(xbin, 2)
+    y = int(ybin, 2)
+
+    key = (x, y)
+
+    return key
+
 if __name__ == '__main__':
+    from SlowNeville import SlowNeville
+
     np.random.seed(0)
 
     n = 8

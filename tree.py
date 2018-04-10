@@ -1,3 +1,4 @@
+import numpy as np
 from polynomials import *
 
 class TreeNode:
@@ -10,19 +11,24 @@ class TreeNode:
 
     def split(self, n, k):
         assert n >= k
+        
+        if hasattr(self, 'n'):
+            print('Node already split.')
+            return 
 
         self.n = n
         self.k = k
+        self.p = None # set later
         self.children = {}
 
         for i in range(n):
-            childAddr = '{}:{}'.format(self.addr, i)
+            childAddr = '{}:{}'.format(self.addr, i+1)
             child = TreeNode(childAddr, self)
 
             self.children[childAddr] = child
 
-    def leaf(self, data):
-        self.data = data
+    def makeVoter(self, voter):
+        self.voter = voter
 
 class ThresTree:
     ''' Tree designed to be used with
@@ -47,22 +53,39 @@ class ThresTree:
 
         return node
 
-    def propagate(self):
+    def propagate(self, data):
         stack = [self.root]
+        D = [data]
 
         while stack:
-            node = stack.pop()
+            node = stack.pop(-1)
+            d = D.pop(-1)
+            polynomial, p = generate_polynomial(d, node.k)
+            node.p = p
 
-            for child in node.children
+            for i, addr in enumerate(node.children.keys()):
+                child = node.children[addr]
+                x = int(addr.split(':')[-1])
+                y = polynomial.evaluate(x)
+                key = (x, y)
 
-    def remove(self, name):
-        pass
+                if hasattr(child, 'children'):
+                    child.children
+                    stack.append(child)
+                    D.append(key_to_data(key))
+                    print('{} added to stack'.format(addr))
+                    
+                else:
+                    # do something with voters
+                    print('{} given key {}'.format(addr, key))
 
 if __name__ == '__main__':
+    np.random.seed(0)
+
     tree = ThresTree()
     tree.root.split(5, 3)
     tree.search('0:1').split(4, 2)
 
-    print(tree.root.children)
-    print(tree.search('0:1').children)
+    data = 10
+    tree.propagate(data)
 
