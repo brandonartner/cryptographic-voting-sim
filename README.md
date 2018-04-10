@@ -11,6 +11,11 @@ Project to implement a secret sharing application.<br/>
   - [ ] Should we have one master document set at the root level? or<br/>
   - [ ] Have each subgroup have its own subdocument set?<br/>
 - [ ] Create visualization for audience
+- [ ] Implement key validation function
+- [ ] Implement add single node function
+- [ ] Turn the toolkit into a class
+- [ ] Fix the key_to_data and data_to_key functions so upward propogations is possible
+
 ## Critical To-Do
 - [ ] Fix ascii art in the README
 <br/>
