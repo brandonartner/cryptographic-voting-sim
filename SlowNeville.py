@@ -1,4 +1,5 @@
 from fractions import Fraction
+from polynomials import find_congruence_with_divisibility
 
 class SlowNeville:
     ''' Incremental implementation of Neville's method
@@ -21,13 +22,14 @@ class SlowNeville:
         
         # 
         for idx, lst in enumerate(self.values[1:]):
+            # we can create a new polynomial with the two values in the list
             if len(lst) == 2:
                 val = self.firstOrderLag(idx)
                 
                 if idx == len(self.values)-2:
-                    self.values.append([self.find_congruence_with_divisibility(val)])
+                    self.values.append([find_congruence_with_divisibility(val)])
                 else:
-                    self.values[idx+2].append(self.find_congruence_with_divisibility(val))
+                    self.values[idx+2].append(find_congruence_with_divisibility(val))
                     
                 # remove value from 
                 self.values[idx+1].pop(0)
@@ -53,16 +55,4 @@ class SlowNeville:
 
         return Fraction(num, den)
 
-    def find_congruence_with_divisibility(self, soln):
 
-        num = soln.numerator % self.p
-        den = soln.denominator % self.p
-
-        i = 0
-        z = (self.p*i+num)/den
-
-        while z != int(z):
-            i += 1
-            z = (self.p*i+num)/den
-
-        return int(z)
