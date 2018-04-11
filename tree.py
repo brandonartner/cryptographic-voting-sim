@@ -16,6 +16,10 @@ class TreeNode:
             print('Node already split.')
             return 
 
+        if hasattr(self, 'voter'):
+            print('Cannot split voter node.')
+            return 
+
         self.n = n
         self.k = k
         self.p = None # set later
@@ -28,6 +32,14 @@ class TreeNode:
             self.children[childAddr] = child
 
     def makeVoter(self, voter):
+        if hasattr(self, 'n'):
+            print('Organization node cannot also be voter node.')
+            return
+
+        if hasattr(self, 'voter'):
+            print('This node is already a voter node.')
+            return 
+
         self.voter = voter
 
 class ThresTree:
@@ -66,7 +78,7 @@ class ThresTree:
             for i, addr in enumerate(node.children.keys()):
                 child = node.children[addr]
                 x = int(addr.split(':')[-1])
-                y = polynomial.evaluate(x)
+                y = polynomial.evaluate(x) % p
                 key = (x, y)
 
                 if hasattr(child, 'children'):
