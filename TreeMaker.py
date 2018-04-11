@@ -1,39 +1,17 @@
 import re
+from ThresTree import ThresTree
 
-class OrgTree():
-	"""docstring for OrgTree"""
-	def __init__(self, display_toggle=True):
-		super(OrgTree, self).__init__() 	
-		self.display_toggle = display_toggle
-
-
-	def add(self, parent_node=None):
-		print("Unimplemented: For now, imagine a new node was just added.")
-		
-	def remove(self, node):
-		print("Unimplemented: For now, imagine a node was just deleted.")
-
-	def clear(self):
-		print("Unimplemented: For now, imagine the whole tree was deleted.")
-
-	def display(self, toggle=False):
-		print("Unimplemented: For now, imagine a beautiful tree was just printed out.")
-
-		if toggle:
-			self.display_toggle = not self.display_toggle
-			print("OrgTree tree change display set to: "+str(self.display_toggle))
-
-class OrgMaker():
-	"""docstring for OrgMaker"""
+class TreeMaker():
+	"""docstring for TreeMaker"""
 	def __init__(self):
-		super(OrgMaker, self).__init__
-		self.org = OrgTree()
+		super(TreeMaker, self).__init__
+		self.tree = ThresTree()
 
 	def help(self, command=''):
 		"""Prints help information.
 		"""
 		if command == 'add' or command == '':
-			print('Name: \n\tadd - Adds n child nodes to the specified node in the organization tree.')
+			print('Name: \n\tadd - Adds n child nodes to the specified node in the treeanization tree.')
 			print(('Usage: \n\tadd n k [#:#:#:...]'
 								'n, is the number of children to make.'
 								'k, is the number of keys from the children nodes that are needed to sign something.'
@@ -58,15 +36,19 @@ class OrgMaker():
 
 		# add n k [#:#:#:...:#]
 		if args[0] == 'add':
-			self.org.add()
+			pass #self.tree.add()
+
+		# split 
+		elif args[0] == 'split'
+			pass #self.tree.split()
 
 		# remove #:#:#:...:#
 		elif args[0] == 'remove':
-			self.org.remove(None)
+			pass #self.tree.remove(None)
 		
 		# clear
 		elif args[0] == 'clear':
-			self.org.clear()
+			pass #self.tree.clear()
 		
 		# finalize
 		elif args[0] == 'finalize':
@@ -76,12 +58,12 @@ class OrgMaker():
 		elif args[0] == 'display':
 			if len(args) > 1:
 				if len(args) <= 2 and re.match("(--always|-a)",args[1]):
-					self.org.display(toggle=True)
+					pass #self.tree.display(toggle=True)
 				else:
 					print("Invalid Use of display.")
 					self.help('display')
 			else:
-				self.org.display()
+				pass #self.tree.display()
 		
 		# help
 		elif args[0] == 'help' or args[0] == 'h':
@@ -99,5 +81,5 @@ class OrgMaker():
 				self.parse(line)
 
 if __name__ == '__main__':
-	orgMaker = OrgMaker()
-	orgMaker.repl()
+	treeMaker = TreeMaker()
+	treeMaker.repl()
