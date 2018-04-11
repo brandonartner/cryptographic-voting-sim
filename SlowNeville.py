@@ -1,5 +1,5 @@
 from fractions import Fraction
-from polynomials import find_congruence_with_divisibility
+from Toolkit import find_congruence_with_divisibility
 
 class SlowNeville:
     ''' Incremental implementation of Neville's method

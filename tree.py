@@ -1,5 +1,4 @@
-import numpy as np
-from polynomials import *
+from Toolkit import *
 
 class TreeNode:
     ''' Nodes used by the Tree object
@@ -92,6 +91,7 @@ class ThresTree:
                     print('{} given key {}'.format(addr, key))
 
 if __name__ == '__main__':
+    import numpy as np
     np.random.seed(0)
 
     tree = ThresTree()
