@@ -1,4 +1,5 @@
 import numpy as np
+from Crypto.Util import number
 
 from fractions import Fraction
 
@@ -38,6 +39,7 @@ def prime_generator(lo, hi):
     '''
     
     return 1004137 # totally random
+    #return number.getStrongPrime(prime_size,false_positive_prob=1e-10) # totally random (yes... yes it is)
 
 def random_distinct(lo, hi, size):
     ''' Used to get lists of distinct random numbers,
@@ -153,19 +155,22 @@ def key_to_data(key, p):
     xbin = bin(x)[2:]
     ybin = bin(y)[2:]
 
-    databin = xbin + ybin
+    # This now pads to make the first number the same bit length of the prime
+    databin = '1' +xbin.zfill(len(bin(p)[2:])) + ybin
     data = int(databin, 2)
 
     return data
 
-def data_to_key(data):
-    databin = bin(data)
+def data_to_key(data,p):
+    databin = bin(data)[2:]
+    prime_bit_len = len(bin(p)[2:])
 
-    xbin = databin[:len(databin)/2]
-    ybin = databin[len(databin)/2:]
+    xbin = databin[1:prime_bit_len+1]
+    #xbin = databin[:len(databin)/2]
+    ybin = databin[prime_bit_len+1:]
 
-    x = int(xbin, 2)
-    y = int(ybin, 2)
+    x = int('0b'+xbin, 2)
+    y = int('0b'+ybin, 2)
 
     key = (x, y)
 
