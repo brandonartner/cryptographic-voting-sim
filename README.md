@@ -14,7 +14,7 @@ Project to implement a secret sharing application.<br/>
 - [ ] Implement key validation function
 - [ ] Implement add single node function
 - [X] Turn the toolkit into a class
-- [ ] Fix the key_to_data and data_to_key functions so upward propogations is possible
+- [X] Fix the key_to_data and data_to_key functions so upward propogations is possible
 
 ## Critical To-Do
 - [ ] Fix ascii art in the README
