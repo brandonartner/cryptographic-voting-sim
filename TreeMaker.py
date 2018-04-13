@@ -8,7 +8,33 @@ import click
 from fuzzyfinder import fuzzyfinder
 from pygments.lexers.python import Python3Lexer
 
-CommandCompleter = WordCompleter(['add', 'split', 'remove', 'clear', 'finalize', 'display', 'help', 'quit'],
+
+commands = {'add': ['Adds n child nodes to the specified node in the treeanization tree.',
+					('add n k [#:#:#:...]\n'
+								'\tn, is the number of children to make.'
+								'k, is the number of keys from the children nodes that are needed to sign something.'
+								'The last arguement is the address of the node the new nodes is being added to,'
+								'if none is specified it is assumed the root is being added (if there isn\'t already).\n')],
+
+			'split': ['No Description','No Usage Info'],
+
+			'remove': ['Removes the specified node from the organization tree.',
+						('remove #:#:#:...\n'
+								'The last arguement is the address of the node that is being removed.\n')],
+
+			'clear': ['No Description','No Usage Info'],
+
+			'finalize': ['No Description','No Usage Info'],
+
+			'display': ['No Description','No Usage Info'],
+
+			'help': ['No Description','No Usage Info'],
+
+			'quit': ['No Description','No Usage Info'],
+
+			}
+
+CommandCompleter = WordCompleter(list(commands.keys()),
                                     ignore_case=True)
 
 class TreeMaker():
@@ -20,31 +46,17 @@ class TreeMaker():
 	def help(self, command=None):
 		"""Prints help information.
 		"""
-		if command is None or command == 'add':
-			print('Name: \n\tadd - Adds n child nodes to the specified node in the treeanization tree.\n')
-			print(('Usage: \n\tadd n k [#:#:#:...]\n'
-								'n, is the number of children to make.'
-								'k, is the number of keys from the children nodes that are needed to sign something.'
-								'The last arguement is the address of the node the new nodes is being added to,'
-								'if none is specified it is assumed the root is being added (if there isn\'t already).\n'))
-			print('-------------------------------------------------------------\n')
-		if command is None or command == 'remove':
-			print('Name: \n\tremove - Removes the specified node from the organization tree.\n')
-			print(('Usage: \n\tremove #:#:#:...\n'
-								'The last arguement is the address of the node that is being removed.\n'))
-			print('-------------------------------------------------------------\n')
-		if command is None or command == 'clear':
-			print('Usage: clear\n')
-			print('-------------------------------------------------------------\n')
-		if command is None or command == 'finalize':
-			print('Usage: finalize\n')
-			print('-------------------------------------------------------------\n')
-		if command is None or command == 'display':
-			print('Usage: display [--always;-a]\n')
-			print('-------------------------------------------------------------\n')
-		if command is None:
-			print('Usage: quit|q\n')
-			print('-------------------------------------------------------------\n')
+		# If a command is given and it is in the commands dictionary, print the help info
+		if command is not None and command in commands:
+			print('------------------------------------------')
+			print('{0} - {1[0]}\n\t{1[1]}\n'.format(command,commands[command]))
+			print('------------------------------------------\n')
+		else:
+			# If the command didn't exist or none was given, print the help info for all commands
+			for command_name in commands:
+				print('------------------------------------------')
+				print('{0} - {1[0]}\n\t{1[1]}\n'.format(command_name,commands[command_name]))
+				print('------------------------------------------\n')
 
 
 	def parse(self,command):
@@ -104,7 +116,7 @@ class TreeMaker():
 		# help [command]
 		elif args[0] == 'help' or args[0] == 'h':
 			if len(args) > 1:
-				if len(args) == 2 and re.match("[a-zA-Z]",args[1]):
+				if len(args) == 2 and re.match("[a-zA-Z]+",args[1]):
 					self.help(args[1])
 				else:
 					raise AttributeError(command)
@@ -115,21 +127,31 @@ class TreeMaker():
 
 
 	def repl(self):
+		"""REPL function for tree maker. Loops until quit is called.
+		"""
+
 		while 1:
 			try:
 				user_input = prompt(u'>>>',
-			                        history=FileHistory('history.txt'),		# uses a history file
-			                        auto_suggest=AutoSuggestFromHistory(),	# uses auto suggest from history functionality
-			                        completer=CommandCompleter,				# uses auto complete
-			                        lexer=Python3Lexer,						# uses syntax highlighting
+									# uses a history file
+			                        history=FileHistory('history.txt'),
+			                        # uses auto suggest from history functionality
+			                        auto_suggest=AutoSuggestFromHistory(),
+			                        # uses auto complete
+			                        completer=CommandCompleter,
+			                        # uses python3 syntax highlighting
+			                        # this might be pointless
+			                        lexer=Python3Lexer,
 			                        )
 				if user_input == 'q' or user_input == 'quit':
 					break
 
 				self.parse(user_input)
 
+				# This allows for multiline intputs, but it also is kind of annoying if there is just one command
 			    #click.echo_via_pager(user_input)
 
+		    # 
 			except NameError as e:
 				print(e.args[0] + ': command not found.\nTry \'help\' or \'h\'.')
 			except AttributeError as e:
