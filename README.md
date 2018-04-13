@@ -5,7 +5,7 @@ Project to implement a secret sharing application.<br/>
 - [X] Implement Legrangian Polynomial Interpolation
 - [X] Update Polynomial Interpolation to Neville's Method, to allow for incremental construction of data
 - [X] Implement Voter class
-- [ ] Create a REPL for creating tree structure<br/>
+- [X] Create a REPL for creating tree structure<br/>
 - [ ] Create the Tree object made by the REPL<br/>
 - [ ] Figure out exactly how the world works (within the confines of our project)<br/>
   - [ ] Should we have one master document set at the root level? or<br/>
@@ -13,7 +13,7 @@ Project to implement a secret sharing application.<br/>
 - [ ] Create visualization for audience
 - [ ] Implement key validation function
 - [ ] Implement add single node function
-- [ ] Turn the toolkit into a class
+- [X] Turn the toolkit into a class
 - [ ] Fix the key_to_data and data_to_key functions so upward propogations is possible
 
 ## Critical To-Do
