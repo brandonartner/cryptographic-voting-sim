@@ -54,29 +54,42 @@ class TreeMaker():
 		# add n k [#:#:#:...:#]
 		if args[0] == 'add':
 			if len(args) > 1:
-				if len(args) == 3: #and re.match("[0-9]+ [0-9]+",args[1]):
+				if len(args) == 3 and re.match("[0-9]+ [0-9]+",command.split('add ')[1]):
 					pass #self.tree.add()
-				elif len(args) == 4: #and re.match("[0-9]+ [0-9]+ ([0-9]+:?)+",args[1]):
+				elif len(args) == 4 and re.match("[0-9]+ [0-9]+ ([0-9]+:?)+",command.split('add ')[1]):
 					pass #self.tree.add()				
 				else:
-					print("Invalid use of add.")
-					self.help('add')
+					raise AttributeError(command)
 
-		# split 
+		# split #:#:...
 		elif args[0] == 'split':
-			pass #self.tree.split()
+			if len(args) > 1:
+				if len(args) == 2 and re.match("([0-9]+:?)+",command.split('split ')[1]):
+					pass #self.tree.split()				
+				else:
+					raise AttributeError(command)
 
 		# remove #:#:#:...:#
 		elif args[0] == 'remove':
-			pass #self.tree.remove(None)
+			if len(args) > 1:
+				if len(args) == 2 and re.match("([0-9]+:?)+",command.split('remove ')[1]):
+					pass #self.tree.remove()				
+				else:
+					raise AttributeError(command)
 		
 		# clear
 		elif args[0] == 'clear':
-			pass #self.tree.clear()
+			if len(args) > 1:
+				pass #self.tree.clear()
+			else:
+				raise AttributeError(command)
 		
 		# finalize
 		elif args[0] == 'finalize':
-			print('Idk what finalize does rn.')
+			if len(args) > 1:
+				pass #self.tree.finalize()
+			else:
+				raise AttributeError(command)
 
 		# display [--always,-a]
 		elif args[0] == 'display':
@@ -84,11 +97,11 @@ class TreeMaker():
 				if len(args) == 2 and re.match("(--always|-a)",args[1]):
 					pass #self.tree.display(toggle=True)
 				else:
-					raise 
+					raise AttributeError(command)
 			else:
 				pass #self.tree.display()
 		
-		# help
+		# help [command]
 		elif args[0] == 'help' or args[0] == 'h':
 			if len(args) > 1:
 				if len(args) == 2 and re.match("[a-zA-Z]",args[1]):
@@ -105,8 +118,8 @@ class TreeMaker():
 		while 1:
 			try:
 				user_input = prompt(u'>>>',
-			                        #history=FileHistory('history.txt'),		# uses a history file
-			                        auto_suggest=AutoSuggestFromHistory(),	# uses auto suggest from history functionality 
+			                        history=FileHistory('history.txt'),		# uses a history file
+			                        auto_suggest=AutoSuggestFromHistory(),	# uses auto suggest from history functionality
 			                        completer=CommandCompleter,				# uses auto complete
 			                        lexer=Python3Lexer,						# uses syntax highlighting
 			                        )
