@@ -40,3 +40,7 @@ Thumbs.db
 #######################
 *.swp
 *.swo
+
+# Python generated files #
+##########################
+_pycache_/
