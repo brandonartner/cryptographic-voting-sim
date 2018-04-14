@@ -60,7 +60,11 @@ class ThresTree:
 
         for addr in location[1:]:
             label = label + ':' + addr
-            node = node.children[label]
+            node = node.children.get(label)
+
+            if node == None:
+                print('{} does not exist.'.format(name))
+                return
 
         return node
 
@@ -96,6 +100,10 @@ class ThresTree:
         del(node.children[childAddr])
 
     def propagate(self, data):
+        if hasattr(self, 'finalized'):
+            print('Tree already propagated.')
+            return 
+
         stack = [self.root]
         D = [data]
 
@@ -131,10 +139,8 @@ class ThresTree:
 
         if hasattr(node, 'children'):
             for child in node.children.values():
+                # too bad python doesn't have tail call optimization
                 self.displayHelper(child, depth+1)
-
-
-
 
 
 if __name__ == '__main__':
@@ -153,4 +159,5 @@ if __name__ == '__main__':
     tree.addChild('0:1')
     tree.removeChild('0')
     tree.display()
+    tree.search('0:5')
 
