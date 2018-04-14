@@ -63,21 +63,22 @@ class TreeMaker():
 		command = command.lower()
 		args = command.split(' ')
 
-		# add n k [#:#:#:...:#]
-		if args[0] == 'add':
+		# split n k #:#:#:...:#
+		if args[0] == 'split':
 			if len(args) > 1:
-				if len(args) == 3 and re.match("[0-9]+ [0-9]+",command.split('add ')[1]):
-					pass #self.tree.add()
-				elif len(args) == 4 and re.match("[0-9]+ [0-9]+ ([0-9]+:?)+",command.split('add ')[1]):
-					pass #self.tree.add()				
+				if len(args) == 4 and re.match("[0-9]+ [0-9]+ ([0-9]+:?)+",command.split('split ')[1]):
+					try:
+						self.tree.search(args[-1]).split(int(args[1]),int(args[2]))
+					except AssertionError as e:
+						raise e
 				else:
 					raise AttributeError(command)
 
-		# split #:#:...
-		elif args[0] == 'split':
+		# add #:#:...
+		elif args[0] == 'add':
 			if len(args) > 1:
-				if len(args) == 2 and re.match("([0-9]+:?)+",command.split('split ')[1]):
-					pass #self.tree.split()				
+				if len(args) == 2 and re.match("([0-9]+:?)+",command.split('add ')[1]):
+					self.tree.addChild(args[-1])				
 				else:
 					raise AttributeError(command)
 
@@ -85,7 +86,7 @@ class TreeMaker():
 		elif args[0] == 'remove':
 			if len(args) > 1:
 				if len(args) == 2 and re.match("([0-9]+:?)+",command.split('remove ')[1]):
-					pass #self.tree.remove()				
+					self.tree.removeChild(args[-1])				
 				else:
 					raise AttributeError(command)
 		
@@ -96,10 +97,10 @@ class TreeMaker():
 			else:
 				raise AttributeError(command)
 		
-		# finalize
+		# finalize data
 		elif args[0] == 'finalize':
-			if len(args) > 1:
-				pass #self.tree.finalize()
+			if len(args) == 2:
+				self.tree.propagate(args[-1])
 			else:
 				raise AttributeError(command)
 
@@ -111,7 +112,7 @@ class TreeMaker():
 				else:
 					raise AttributeError(command)
 			else:
-				pass #self.tree.display()
+				self.tree.display()
 		
 		# help [command]
 		elif args[0] == 'help' or args[0] == 'h':
@@ -156,6 +157,8 @@ class TreeMaker():
 				print(e.args[0] + ': command not found.\nTry \'help\' or \'h\'.')
 			except AttributeError as e:
 				print(e.args[0] + ': invalid use.\nTry \'help [command]\' or \'h [command]\'.')
+			except AssertionError as e:
+				print(e.args[0])
 
 
 if __name__ == '__main__':
