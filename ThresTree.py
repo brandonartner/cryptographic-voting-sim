@@ -21,7 +21,7 @@ class TreeNode:
 
         self.n = n
         self.k = k
-        self.p = None # set later
+        self.p = None # set during propagation
         self.children = {}
 
         for i in range(n):
@@ -60,11 +60,50 @@ class ThresTree:
 
         for addr in location[1:]:
             label = label + ':' + addr
-            node = node.children[label]
+            node = node.children.get(label)
+
+            if node == None:
+                print('{} does not exist.'.format(name))
+                return
 
         return node
 
+    def addChild(self, addr):
+        ''' Adds child to node at addr '''
+
+        if hasattr(self, 'finalized'):
+            print('Cannot alter finalized tree.')
+            return
+
+        node = self.search(addr)
+
+        if hasattr(node, 'n'):
+            numChildren = len(node.children.keys())
+            childAddr = '{}:{}'.format(node.addr, numChildren+1)
+            child = TreeNode(childAddr, node)
+
+            node.children[childAddr] = child
+
+        else:
+            print('Cannot add to unsplit node.')
+
+    def removeChild(self, addr):
+        ''' Removes child from node at addr '''
+
+        if hasattr(self, 'finalized'):
+            print('Cannot alter finalized tree.')
+            return
+
+        node = self.search(addr)
+        childAddr = '{}:{}'.format(node.addr, len(node.children.keys()))
+
+        del(node.children[childAddr])
+
     def propagate(self, data):
+        if hasattr(self, 'finalized'):
+            print('Tree already propagated.')
+            return 
+
         stack = [self.root]
         D = [data]
 
@@ -83,21 +122,42 @@ class ThresTree:
                 if hasattr(child, 'children'):
                     child.children
                     stack.append(child)
-                    D.append(key_to_data(key))
+                    D.append(key_to_data(key, p))
                     print('{} added to stack'.format(addr))
                     
                 else:
                     # do something with voters
                     print('{} given key {}'.format(addr, key))
 
+        self.finalized = True
+
+    def display(self):
+        self.displayHelper(self.root, 0)
+
+    def displayHelper(self, node, depth):
+        print('{}{}'.format(depth*'\t', node.addr))
+
+        if hasattr(node, 'children'):
+            for child in node.children.values():
+                # too bad python doesn't have tail call optimization
+                self.displayHelper(child, depth+1)
+
+
 if __name__ == '__main__':
     import numpy as np
     np.random.seed(0)
 
     tree = ThresTree()
+
     tree.root.split(5, 3)
     tree.search('0:1').split(4, 2)
+    tree.addChild('0:1')
+    tree.removeChild('0')
 
     data = 10
     tree.propagate(data)
+    tree.addChild('0:1')
+    tree.removeChild('0')
+    tree.display()
+    tree.search('0:5')
 
