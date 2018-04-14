@@ -6,15 +6,17 @@ Project to implement a secret sharing application.<br/>
 - [X] Update Polynomial Interpolation to Neville's Method, to allow for incremental construction of data
 - [X] Implement Voter class
 - [X] Create a REPL for creating tree structure<br/>
-- [ ] Create the Tree object made by the REPL<br/>
-- [ ] Figure out exactly how the world works (within the confines of our project)<br/>
+- [X] Create the Tree object made by the REPL<br/>
+- [X] Figure out exactly how the world works (within the confines of our project)<br/>
   - [ ] Should we have one master document set at the root level? or<br/>
-  - [ ] Have each subgroup have its own subdocument set?<br/>
+  - [X] Have each subgroup have its own subdocument set?<br/>
 - [ ] Create visualization for audience
 - [ ] Implement key validation function
-- [ ] Implement add single node function
-- [X] Turn the toolkit into a class
+- [X] Implement add single node function
+- ~~[ ] Turn the toolkit into a class~~
 - [X] Fix the key_to_data and data_to_key functions so upward propogations is possible
+- [ ] Create GUI
+- [ ] Implement Voter class concept into ThresTree
 
 ## Critical To-Do
 - [ ] Fix ascii art in the README
