@@ -100,7 +100,7 @@ class TreeMaker():
 		# finalize data
 		elif args[0] == 'finalize':
 			if len(args) == 2:
-				self.tree.propagate(args[-1])
+				self.tree.propagate(int(args[-1]))
 			else:
 				raise AttributeError(command)
 

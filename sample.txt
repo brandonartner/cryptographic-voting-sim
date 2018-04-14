@@ -1,0 +1,5 @@
+split 10 4 0
+split 10 4 0:1
+split 10 4 0:5
+split 2 1 0:6
+display
