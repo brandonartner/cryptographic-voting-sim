@@ -4,7 +4,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.contrib.completers import WordCompleter
-import click
+#import click
 from fuzzyfinder import fuzzyfinder
 from pygments.lexers.python import Python3Lexer
 
