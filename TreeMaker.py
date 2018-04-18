@@ -9,14 +9,16 @@ from fuzzyfinder import fuzzyfinder
 from pygments.lexers.python import Python3Lexer
 
 
-commands = {'add': ['Adds n child nodes to the specified node in the treeanization tree.',
-					('add n k [#:#:#:...]\n'
+commands = {'add': ['Adds a child node to the specified node in the tree.',
+					('add #:#:#:...\n'
+								'\t#:#:#:..., the address of the node the new node is being added to.'
+								'This can only be called for nodes that have already been split.\n')],
+
+			'split': ['Adds n child nodes to the specified node in the treeanization tree.',
+						('split n k #:#:#:...\n'
 								'\tn, is the number of children to make.'
 								'k, is the number of keys from the children nodes that are needed to sign something.'
-								'The last arguement is the address of the node the new nodes is being added to,'
-								'if none is specified it is assumed the root is being added (if there isn\'t already).\n')],
-
-			'split': ['No Description','No Usage Info'],
+								'#:#:#:..., the address of the node that is being split.\n')],
 
 			'remove': ['Removes the specified node from the organization tree.',
 						('remove #:#:#:...\n'
