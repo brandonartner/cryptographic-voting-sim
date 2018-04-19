@@ -1,4 +1,5 @@
 from Toolkit import *
+from Voter import Voter 
 
 class TreeNode:
     ''' Nodes used by the Tree object
@@ -7,39 +8,29 @@ class TreeNode:
     def __init__(self, addr, parent=None):
         self.addr = addr
         self.parent = parent
+        self.documents = {}
+        self.voter = None
 
     def split(self, n, k):
-        assert n >= k
+        try:
+            assert n >= k
+        except AssertionError as e:
+            raise AssertionError('N must be less than or equal to K.')
         
-        if hasattr(self, 'n'):
-            print('Node already split.')
-            return 
-
-        if hasattr(self, 'voter'):
+        if self.voter:
+            # Maybe raise an exception instead, idk which type though?
             print('Cannot split voter node.')
             return 
 
+        self.children = {}
         self.n = n
         self.k = k
-        self.p = None # set during propagation
-        self.children = {}
 
         for i in range(n):
             childAddr = '{}:{}'.format(self.addr, i+1)
             child = TreeNode(childAddr, self)
 
             self.children[childAddr] = child
-
-    def makeVoter(self, voter):
-        if hasattr(self, 'n'):
-            print('Organization node cannot also be voter node.')
-            return
-
-        if hasattr(self, 'voter'):
-            print('This node is already a voter node.')
-            return 
-
-        self.voter = voter
 
 class ThresTree:
     ''' Tree designed to be used with
