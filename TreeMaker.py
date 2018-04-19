@@ -44,6 +44,7 @@ class TreeMaker():
 	def __init__(self):
 		super(TreeMaker, self).__init__
 		self.tree = ThresTree()
+		self.display_toggle = False
 
 	def help(self, command=None):
 		"""Prints help information.
@@ -110,7 +111,8 @@ class TreeMaker():
 		elif args[0] == 'display':
 			if len(args) > 1:
 				if len(args) == 2 and re.match("(--always|-a)",args[1]):
-					pass #self.tree.display(toggle=True)
+					self.display_toggle = not self.display_toggle
+					self.tree.display()
 				else:
 					raise AttributeError(command)
 			else:
@@ -127,6 +129,9 @@ class TreeMaker():
 				self.help()
 		else:
 			raise NameError(args[0])
+
+		if self.display_toggle:
+			self.tree.display()
 
 
 	def repl(self):
