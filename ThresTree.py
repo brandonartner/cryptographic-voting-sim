@@ -1,5 +1,5 @@
 from Toolkit import *
-from Voter import Voter 
+from Voter import Voter
 
 class TreeNode:
     ''' Nodes used by the Tree object
@@ -10,12 +10,10 @@ class TreeNode:
         self.parent = parent
         self.documents = {}
         self.voter = None
+        self.finalized = False
 
     def split(self, n, k):
-        try:
-            assert n >= k
-        except AssertionError as e:
-            raise AssertionError('N must be less than or equal to K.')
+        assert n >= k, 'n<k: invalid arguements. n must be greater than or equal to k.'
         
         if self.voter:
             # Maybe raise an exception instead, idk which type though?
@@ -31,6 +29,28 @@ class TreeNode:
             child = TreeNode(childAddr, self)
 
             self.children[childAddr] = child
+
+    def finalize(self,data=None):
+        '''Creates a voter object for each non-leaf node.
+            data should be a key pair.
+        '''
+        if not self.finalized:
+
+            if hasattr(self,'children'):
+                self.voter = Voter(self.n,self.k)
+                # should this check if data is a key pair
+                if data:
+                    data = key_to_data(data, self.voter.p)
+                keys = self.voter.generate_scheme(data)
+                self.finalized = True
+
+                for i, child in enumerate(self.children.values()):
+                    child.finalize(keys[i])
+
+            else:
+                self.data = data
+        else:
+            print('Error: Node at {} is already finalized.'.format(self.addr))
 
 class ThresTree:
     ''' Tree designed to be used with
@@ -90,35 +110,12 @@ class ThresTree:
 
         del(node.children[childAddr])
 
-    def propagate(self, data):
+    def propagate(self, data=None):
         if hasattr(self, 'finalized'):
             print('Tree already propagated.')
             return 
 
-        stack = [self.root]
-        D = [data]
-
-        while stack:
-            node = stack.pop(-1)
-            d = D.pop(-1)
-            polynomial, p = generate_polynomial(d, node.k)
-            node.p = p
-
-            for i, addr in enumerate(node.children.keys()):
-                child = node.children[addr]
-                x = int(addr.split(':')[-1])
-                y = polynomial.evaluate(x) % p
-                key = (x, y)
-
-                if hasattr(child, 'children'):
-                    child.children
-                    stack.append(child)
-                    D.append(key_to_data(key, p))
-                    print('{} added to stack'.format(addr))
-                    
-                else:
-                    # do something with voters
-                    print('{} given key {}'.format(addr, key))
+        self.root.finalize(data)
 
         self.finalized = True
 
@@ -126,7 +123,10 @@ class ThresTree:
         self.displayHelper(self.root, 0)
 
     def displayHelper(self, node, depth):
-        print('{}{}'.format(depth*'\t', node.addr))
+        if hasattr(node, 'data'):
+            print('{}{} - [{},{}]'.format(depth*'\t', node.addr, node.data[0], hex(node.data[1])))
+        else:
+            print('{}{}'.format(depth*'\t', node.addr))
 
         if hasattr(node, 'children'):
             for child in node.children.values():

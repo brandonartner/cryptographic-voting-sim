@@ -102,8 +102,10 @@ class TreeMaker():
 		
 		# finalize data
 		elif args[0] == 'finalize':
-			if len(args) == 2:
+			if re.match("finalize [0-9]+", command):
 				self.tree.propagate(int(args[-1]))
+			elif re.match("finalize", command):
+				self.tree.propagate()
 			else:
 				raise AttributeError(command)
 
