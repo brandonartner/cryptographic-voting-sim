@@ -37,10 +37,16 @@ class TreeNode:
         if not self.finalized:
 
             if hasattr(self,'children'):
-                self.voter = Voter(self.n,self.k)
+                print('Initializing voter for {} with data {}.'.format(self.addr,data))
                 # should this check if data is a key pair
                 if data:
-                    data = key_to_data(data, self.voter.p)
+                    data = key_to_data(data, self.n)
+                    # if data is given, the size of the prime needs to be increased to a bigger multiple of 128
+                    #       Note: 128 because the RSA keys need the prime size to be a multiple of 128.
+                    self.voter = Voter(self.n,self.k, prime_size=next_multiple_of_128(data))
+                else:
+                    self.voter = Voter(self.n,self.k)
+
                 keys = self.voter.generate_scheme(data)
                 self.finalized = True
 
@@ -48,6 +54,7 @@ class TreeNode:
                     child.finalize(keys[i])
 
             else:
+                print('{} has gotten the data {}.'.format(self.addr,data))
                 self.data = data
         else:
             print('Error: Node at {} is already finalized.'.format(self.addr))

@@ -1,5 +1,6 @@
 import numpy as np
 from Crypto.Util import number
+import math
 
 from fractions import Fraction
 
@@ -175,6 +176,13 @@ def data_to_key(data,p):
     key = (x, y)
 
     return key
+
+def next_multiple_of_128(data):
+    '''Calculates the smallest number of bits bigger than the length of data and a multiple of 128.
+    '''
+    bin_data_len = len(bin(data)[2:]) 
+
+    return math.ceil(bin_data_len/128)*128
 
 if __name__ == '__main__':
     from SlowNeville import SlowNeville
