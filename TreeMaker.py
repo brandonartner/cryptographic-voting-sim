@@ -154,7 +154,7 @@ class TreeMaker():
 			                        lexer=Python3Lexer,
 			                        )
 				if user_input == 'q' or user_input == 'quit':
-					break
+					return self.tree
 
 				self.parse(user_input)
 
@@ -170,6 +170,24 @@ class TreeMaker():
 				print(e.args[0])
 
 
+def simulateVoting(org):
+	''' Simulates how an org might work
+	'''
+
+	while True:
+		org.display()
+
+		nextVote = input('What is the address of who is voting?')
+		fileName = input('Whats the name of the file being voted on?')
+
+		documentText = open(fileName, 'r').read()
+		
+		votingNode = org.search(nextVote)
+		votingNode.vote((fileName, documentText))
+
+
 if __name__ == '__main__':
 	treeMaker = TreeMaker()
-	treeMaker.repl()
+	org = treeMaker.repl()
+
+	simulateVoting(org)

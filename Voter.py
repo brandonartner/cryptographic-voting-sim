@@ -112,15 +112,13 @@ class Voter:
 		return list(zip(X, Y))
 
 
-	def add_key_to_signature(self, key):
+	def add_key_to_signature(self, key, doc):
 		''' 
 			Adds given key and feeds forward.
 
 			Returns: soln - when k keys have been submitted, the original data
 							otherwise, None
 		'''
-
-		soln = None
 
 		# splitting the key across first two lists
 		self.values[0].append(key[0])
@@ -144,11 +142,10 @@ class Voter:
 
 		# if there are k elements, than we are done, delete all elements and return the last value
 		if len(self.values[0]) == self.k:
-		    soln = self.values[-1][0]
+		    self.sign(self.values[-1][0], doc)
 		    for i in range(len(self.values)):
 		        self.values[i] = []
 
-		return soln
 
 	def firstOrderLag(self, idx):
 		j = -1
@@ -179,10 +176,12 @@ class Voter:
 
 		return int(z)
 
-	def sign(self, doc):
+	def sign(self, private_key, doc):
 		'''
 			Function creates the digital signature for the scheme.
 			doc: Data that is being signed
 			Return: Digital Signature
 		'''
-		pass
+		print(private_key)
+		print(doc)
+		

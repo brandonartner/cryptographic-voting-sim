@@ -52,6 +52,15 @@ class TreeNode:
         else:
             print('Error: Node at {} is already finalized.'.format(self.addr))
 
+    def vote(self, doc):
+        '''Votes
+        '''
+        if hasattr(self,'data'):
+            # sends data, transformed back into a key, to the parent nodes voter class
+            if doc not in self.documents.items():
+                self.documents.update({doc[0]:doc[1]})
+            self.parent.voter.add_key_to_signature(self.data, doc)
+
 class ThresTree:
     ''' Tree designed to be used with
         Adi Shamir's (n, k)-thresholding scheme
