@@ -164,8 +164,8 @@ class Voter:
 
 	def find_divisible_congruency(self, soln):
 
-		num = soln.numerator % self.p
-		den = soln.denominator % self.p
+		num = Fraction(soln.numerator % self.p,1)
+		den = Fraction(soln.denominator % self.p,1)
 
 		i = 0
 		z = (self.p*i+num)/den
