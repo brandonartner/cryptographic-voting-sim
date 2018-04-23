@@ -51,7 +51,7 @@ class VoteSim():
 			#try:
 			user_input = prompt(u'>>>',
 								# uses a history file
-		                        history=FileHistory('history.txt'),
+		                        history=FileHistory('voting_history.txt'),
 		                        # uses auto suggest from history functionality
 		                        auto_suggest=AutoSuggestFromHistory(),
 		                        # uses auto complete
