@@ -14,6 +14,7 @@ Project to implement a secret sharing application.<br/>
 - [ ] Implement key validation function
 - [X] Implement add single node function
 - [ ] ~~Turn the toolkit into a class~~
+  - [ ] Rework toolkit to actually make sense (its basically a bunch of repeated functions).
 - [X] Fix the key_to_data and data_to_key functions so upward propogations is possible
 - [ ] Create GUI
 - [ ] Implement Voter class concept into ThresTree
