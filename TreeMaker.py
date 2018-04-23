@@ -7,6 +7,7 @@ from prompt_toolkit.contrib.completers import WordCompleter
 #import click
 from fuzzyfinder import fuzzyfinder
 from pygments.lexers.python import Python3Lexer
+from VoteSim import VoteSim
 
 
 commands = {'add': ['Adds a child node to the specified node in the tree.',
@@ -139,7 +140,7 @@ class TreeMaker():
 	def repl(self):
 		"""REPL function for tree maker. Loops until quit is called.
 		"""
-
+		print('This is where you set up your organization layout. Enter h for list of commands.')
 		while 1:
 			try:
 				user_input = prompt(u'>>>',
@@ -158,9 +159,6 @@ class TreeMaker():
 
 				self.parse(user_input)
 
-				# This allows for multiline intputs, but it also is kind of annoying if there is just one command
-			    #click.echo_via_pager(user_input)
-
 		    # 
 			except NameError as e:
 				print(e.args[0] + ': command not found.\nTry \'help\' or \'h\'.')
@@ -170,24 +168,9 @@ class TreeMaker():
 				print(e.args[0])
 
 
-def simulateVoting(org):
-	''' Simulates how an org might work
-	'''
-
-	while True:
-		org.display()
-
-		nextVote = input('What is the address of who is voting?')
-		fileName = input('Whats the name of the file being voted on?')
-
-		documentText = open(fileName, 'r').read()
-		
-		votingNode = org.search(nextVote)
-		votingNode.vote((fileName, documentText))
-
-
 if __name__ == '__main__':
 	treeMaker = TreeMaker()
 	org = treeMaker.repl()
-
-	simulateVoting(org)
+	
+	voteSim = VoteSim(org)
+	voteSim.repl()
