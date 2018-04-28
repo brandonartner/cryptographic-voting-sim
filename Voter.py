@@ -3,6 +3,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Util import number
 from Crypto.Random import random
 from sympy.abc import x
+from Toolkit import *
 
 import sympy
 
@@ -148,6 +149,8 @@ class Voter:
 
 
 	def firstOrderLag(self, idx):
+		''' Calculates the nth-ordered Lagrangian Interpolating Polynomial, evaluated at 0.
+		'''
 		j = -1
 		i = j - (idx + 1)
 
@@ -162,10 +165,15 @@ class Voter:
 		return Fraction(num, den)
 
 
-	def find_divisible_congruency(self, soln):
-
-		num = Fraction(soln.numerator % self.p,1)
-		den = Fraction(soln.denominator % self.p,1)
+	def find_divisible_congruency(self, fraction):
+		''' Calculates a congruent integer to the numerator that is divisible by the denominator.
+			Input: fraction, the fraction in question.
+			Return: The z such that z = (num + i*prime)/den and z is an integer (without trunction).
+		'''
+		# Fracction class is used here because float division can't handle crypto-secure sized numbers,
+		#  but Fraction uses integers, which can handle effectively infinite numbers
+		num = Fraction(fraction.numerator % self.p,1)
+		den = Fraction(fraction.denominator % self.p,1)
 
 		i = 0
 		z = (self.p*i+num)/den
@@ -182,6 +190,6 @@ class Voter:
 			doc: Data that is being signed
 			Return: Digital Signature
 		'''
-		print(private_key)
+		print(data_to_key(private_key,self.n))
 		print(doc)
 		
