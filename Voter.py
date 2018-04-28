@@ -1,5 +1,5 @@
 from fractions import Fraction
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import DSA
 from Crypto.Util import number
 from Crypto.Random import random
 from sympy.abc import x
@@ -12,7 +12,7 @@ class Voter:
 		a signature.
 	"""
 
-	def __init__(self, n, k, prime_size=1024):
+	def __init__(self, node, n, k, prime_size=1024):
 		'''	
 			n: total number of keys for the voter
 			k: the required number of votes
@@ -25,6 +25,7 @@ class Voter:
 		self.k = k
 		self.values = [[], []]
 		self.pubKey = None
+		self.node = node
 
 	def generate_scheme(self, data=None):
 		'''	Generates the private-public key pair, the polynomial, and the keys
@@ -33,14 +34,26 @@ class Voter:
 			data: If the voter is not the root voter then there should be a piece of data passed in...
 		'''
 		if not data:
-			print('Creating new RSA pair.')
-			# Generate the RSA public-private key pair for signing with
-			key = RSA.generate(self.prime_size) 
-			# Set the prime equal to the modulus from the RSA key set
-			#self.p = key.n
-			# Set the public key to the public key from the RSA key set
-			self.pubKey = key.e
-			data = key.d
+			print('Creating new DSA pair.')
+			# Generate the DSA public-private key pair for signing with
+			key = DSA.generate(self.prime_size)
+			# Set the prime equal to the modulus from the DSA key set
+			self.p = key.p
+			# Set the public key to the public key from the DSA key set
+			self.pubKey = key.y
+			data = key.x
+		'''
+		else:
+			print('Creating new DSA pair.')
+			# Generate the DSA public-private key pair for signing with
+			key = DSA.importKey(convert_to_format(data))
+			# Set the prime equal to the modulus from the DSA key set
+			self.p = key.p
+			# Set the public key to the public key from the DSA key set
+			self.pubKey = key.y
+			data = key.x
+		'''
+
 		# Generate a polynomial
 		poly = self.generate_polynomial(data%self.p)
 		# Reutrn a set of keys generated from the polynomial
@@ -190,6 +203,12 @@ class Voter:
 			doc: Data that is being signed
 			Return: Digital Signature
 		'''
+		# Sign the document. 
+		# If voter is a subvoter, also send key to parent.
+		#
 		print(data_to_key(private_key,self.n))
 		print(doc)
+		
+		if self.node.parent:
+			self.node.vote(doc, key=data_to_key(private_key,self.n))
 		

@@ -43,9 +43,9 @@ class TreeNode:
                     data = key_to_data(data, self.n)
                     # if data is given, the size of the prime needs to be increased to a bigger multiple of 128
                     #       Note: 128 because the RSA keys need the prime size to be a multiple of 128.
-                    self.voter = Voter(self.n,self.k, prime_size=next_multiple_of_128(data))
+                    self.voter = Voter(self, self.n,self.k, prime_size=next_multiple_of_128(data))
                 else:
-                    self.voter = Voter(self.n,self.k)
+                    self.voter = Voter(self, self.n,self.k)
 
                 keys = self.voter.generate_scheme(data)
                 self.finalized = True
@@ -59,14 +59,16 @@ class TreeNode:
         else:
             print('Error: Node at {} is already finalized.'.format(self.addr))
 
-    def vote(self, doc):
+    def vote(self, doc, key=None):
         '''Votes
         '''
-        if hasattr(self,'data'):
-            # sends data, transformed back into a key, to the parent nodes voter class
-            print('{} voted to sign {}.'.format(self.addr,doc))
-            if doc not in self.documents.items():
-                self.documents.update({doc[0]:doc[1]})
+        # sends data, transformed back into a key, to the parent nodes voter class
+        print('{} voted to sign {}.'.format(self.addr,doc))
+        if doc not in self.documents.items():
+            self.documents.update({doc[0]:doc[1]})
+        if key:
+            self.parent.voter.add_key_to_signature(key, doc)
+        else:
             self.parent.voter.add_key_to_signature(self.data, doc)
 
 class ThresTree:
