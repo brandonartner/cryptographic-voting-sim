@@ -1,0 +1,6 @@
+split 3 2 0
+split 3 2 0:1
+finalize
+display
+quit
+quit

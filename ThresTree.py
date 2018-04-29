@@ -63,13 +63,15 @@ class TreeNode:
         '''Votes
         '''
         # sends data, transformed back into a key, to the parent nodes voter class
-        print('{} voted to sign {}.'.format(self.addr,doc))
-        if doc not in self.documents.items():
-            self.documents.update({doc[0]:doc[1]})
-        if key:
+        if hasattr(self, 'data'):
+            print('{} voted to sign {}.'.format(self.addr,doc))
+            if doc not in self.documents.items():
+                self.documents.update({doc[0]:[doc[1]]})
+            if not key:
+                self.parent.voter.add_key_to_signature(self.data, doc)
+        elif key:
+            print('{} voted to sign {}.'.format(self.addr,doc))
             self.parent.voter.add_key_to_signature(key, doc)
-        else:
-            self.parent.voter.add_key_to_signature(self.data, doc)
 
 class ThresTree:
     ''' Tree designed to be used with

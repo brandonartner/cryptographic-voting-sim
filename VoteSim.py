@@ -4,9 +4,9 @@ from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.contrib.completers import WordCompleter
-#import click
 from fuzzyfinder import fuzzyfinder
 from pygments.lexers.python import Python3Lexer
+import sys
 
 commands = {'vote': ['vote addr filename','No Usage Info'],
 
@@ -75,17 +75,21 @@ class VoteSim():
 		print('Now Simulating a Vote. Enter h for list of commands.')
 		while 1:
 			try:
-				user_input = prompt(u'>>>',
-									# uses a history file
-			                        history=FileHistory('voting_history.txt'),
-			                        # uses auto suggest from history functionality
-			                        auto_suggest=AutoSuggestFromHistory(),
-			                        # uses auto complete
-			                        completer=CommandCompleter,
-			                        # uses python3 syntax highlighting
-			                        # this might be pointless
-			                        lexer=Python3Lexer,
-			                        )
+				if sys.stdin.isatty():
+					user_input = prompt(u'>>>',
+										# uses a history file
+				                        history=FileHistory('voting_history.txt'),
+				                        # uses auto suggest from history functionality
+				                        auto_suggest=AutoSuggestFromHistory(),
+				                        # uses auto complete
+				                        completer=CommandCompleter,
+				                        # uses python3 syntax highlighting
+				                        # this might be pointless
+				                        lexer=Python3Lexer,
+				                        )
+				else:
+					user_input = input('>>>')
+
 				if user_input == 'q' or user_input == 'quit':
 					break
 
