@@ -144,6 +144,7 @@ class TreeMaker():
 		print('This is where you set up your organization layout. Enter h for list of commands.')
 		while 1:
 			try:
+				# if the input stream is from keyboard use fancy repl, if not use basic
 				if sys.stdin.isatty():
 					user_input = prompt(u'>>>',
 										# uses a history file

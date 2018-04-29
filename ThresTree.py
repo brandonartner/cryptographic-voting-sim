@@ -65,13 +65,32 @@ class TreeNode:
         # sends data, transformed back into a key, to the parent nodes voter class
         if hasattr(self, 'data'):
             print('{} voted to sign {}.'.format(self.addr,doc))
-            if doc not in self.documents.items():
-                self.documents.update({doc[0]:[doc[1]]})
+
+            if not self.parent.documents.get(doc[0]):
+                print('Document \'{}\' is now available for voting on.'.format(doc[0]))
+                self.parent.documents[doc[0]] = [doc[1]]
+
+            elif doc[1] != self.parent.documents[doc[0]][0]:
+                print('Document \'{}\' has been updated and is now available for voting on.'.format(doc[0]))
+                self.parent.documents[doc[0]] = [doc[1]]
+            
             if not key:
                 self.parent.voter.add_key_to_signature(self.data, doc)
         elif key:
             print('{} voted to sign {}.'.format(self.addr,doc))
             self.parent.voter.add_key_to_signature(key, doc)
+
+    def show_documents(self, verified_only=False):
+        ''' Prints all of the documents. 
+        '''
+        for doc in self.documents:
+            verified = self.voter.verify(doc)
+            if not verified_only:
+                print('Title: {}\n Text: {}'.format(doc.key(),doc.value()))
+                print('Document is Signed.\n' if verified else 'Document is unsigned.\n')
+            elif verified:
+                print('Title: {}\n Text: {}'.format(doc.key(),doc.value()))
+                print('Document is Signed.\n' if verified else 'Document is unsigned.\n')
 
 class ThresTree:
     ''' Tree designed to be used with

@@ -9,6 +9,11 @@ from pygments.lexers.python import Python3Lexer
 import sys
 
 commands = {'vote': ['vote addr filename','No Usage Info'],
+			
+			'documents': ['Shows the documents set for a given address.',
+							('documents [#:#:#:...] [-v]\n'
+										'\t#:#:#:..., the address of the node the new node is being added to. If none specified, assumes root.\n'
+										'\t-v, show only verified. (Currently only works on root node.)\n')],
 
 			'display': ['display','No Usage Info'],
 
@@ -55,6 +60,16 @@ class VoteSim():
 			if votingNode:
 				votingNode.vote((fileName, documentText))
 
+		elif re.match('documents', command[0]):
+			addr = '0'
+			if False:
+				pass	# if an address is specified, set addr to that address
+			if '-v' in command:
+				self.tree.search(addr).show_documents(verified_only=True)
+			else:
+				self.tree.search(addr).show_documents()
+
+
 		elif re.match('display', command[0]):
 			self.tree.display()
 		elif args[0] == 'help' or args[0] == 'h':
@@ -75,6 +90,7 @@ class VoteSim():
 		print('Now Simulating a Vote. Enter h for list of commands.')
 		while 1:
 			try:
+				# if the input stream is from keyboard use fancy repl, if not use basic
 				if sys.stdin.isatty():
 					user_input = prompt(u'>>>',
 										# uses a history file

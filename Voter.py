@@ -4,6 +4,7 @@ from Crypto.Util import number
 from Crypto.Random import random
 from sympy.abc import x
 from Toolkit import *
+import hashlib
 
 import sympy
 
@@ -39,6 +40,8 @@ class Voter:
 			key = DSA.generate(self.prime_size)
 			# Set the prime equal to the modulus from the DSA key set
 			self.p = key.p
+			self.subgroup_order = key.q
+			self.subgroup_generator = key.g
 			# Set the public key to the public key from the DSA key set
 			self.pubKey = key.y
 			data = key.x
@@ -206,9 +209,22 @@ class Voter:
 		# Sign the document. 
 		# If voter is a subvoter, also send key to parent.
 		#
-		print(data_to_key(private_key,self.n))
-		print(doc)
-		
+		private_key = data_to_key(private_key,self.n)
+
+		if self.pubKey:
+			dsa = DSA.construct((self.pubKey, self.subgroup_generator, self.p, self.subgroup_order, key_to_data(private_key,self.n)))
+			m = hashlib.sha256()
+			m.update(doc[1].encode())
+			signature = dsa.sign(m.digest(),private_key[1])
+
+			self.node.documents[doc[0]].append(signature)
+
+		print('\'{}\' has been signed by node {}'.format(doc[0],self.node.addr))
+
 		if self.node.parent:
-			self.node.vote(doc, key=data_to_key(private_key,self.n))
+			self.node.vote(doc, key=private_key)
 		
+	def verify(self,doc):
+		''' 
+		'''
+		return False
