@@ -184,6 +184,11 @@ def next_multiple_of_128(data):
 
     return math.ceil(bin_data_len/128)*128
 
+def convvert_to_PEM(private_key):
+    ''' Converts a private key integer to PEM format
+    '''
+    base64_key = 0
+
 if __name__ == '__main__':
     from SlowNeville import SlowNeville
 
