@@ -224,7 +224,16 @@ class Voter:
 		if self.node.parent:
 			self.node.vote(doc, key=private_key)
 		
-	def verify(self,doc):
-		''' 
+	def verify(self,doc, signature):
 		'''
+			Function verifies a digital signature.
+			doc: Data that is being signed
+			Return: Digital Signature
+		'''
+		if self.pubKey:
+			dsa = DSA.construct((self.pubKey, self.subgroup_generator, self.p, self.subgroup_order))
+			m = hashlib.sha256()
+			m.update(doc.encode())
+			return dsa.verify(m.digest(),signature)
+
 		return False

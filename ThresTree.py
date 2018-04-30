@@ -83,14 +83,18 @@ class TreeNode:
     def show_documents(self, verified_only=False):
         ''' Prints all of the documents. 
         '''
-        for doc in self.documents:
-            verified = self.voter.verify(doc)
+        for docname,doc in self.documents.items():
+            if len(doc)==2:
+                verified = self.voter.verify(doc[0],doc[1])
+            else:
+                verified = False
+
             if not verified_only:
-                print('Title: {}\n Text: {}'.format(doc.key(),doc.value()))
+                print('Title: {}\n Text: {}'.format(docname,doc[0]))
                 print('Document is Signed.\n' if verified else 'Document is unsigned.\n')
             elif verified:
-                print('Title: {}\n Text: {}'.format(doc.key(),doc.value()))
-                print('Document is Signed.\n' if verified else 'Document is unsigned.\n')
+                print('Title: {}\n Text: {}'.format(docname,doc[0]))
+                print('Document is Signed.\n')
 
 class ThresTree:
     ''' Tree designed to be used with
