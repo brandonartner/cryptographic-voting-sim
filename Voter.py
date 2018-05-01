@@ -157,9 +157,10 @@ class Voter:
 
 		# if there are k elements, than we are done, delete all elements and return the last value
 		if len(self.values[0]) == self.k:
-		    self.sign(self.values[-1][0], doc)
-		    for i in range(len(self.values)):
-		        self.values[i] = []
+			temp = self.sign(doc, self.values[-1][0])
+			for i in range(len(self.values)):
+				self.values[i] = []
+			return temp
 
 
 	def firstOrderLag(self, idx):
@@ -198,15 +199,18 @@ class Voter:
 
 		return int(z)
 
-	def sign(self, private_key, doc):
+	def sign(self, doc, private_key):
 		'''
 			Function creates the digital signature for the scheme.
 			doc: Data that is being signed
-			Return: Digital Signature
+			Return: DSA Signature
 		'''
 		# Sign the document. 
 		# If voter is a subvoter, also send key to parent.
 		#
+
+		if self.node.parent:
+			self.node.vote(doc, key=data_to_key(private_key,self.n))
 
 		if self.pubKey:
 			key = DSA.construct((self.pubKey.y, self.pubKey.g, self.pubKey.p, self.pubKey.q, private_key))
@@ -218,12 +222,10 @@ class Voter:
 
 			signature = key.sign(h,k)
 
-			self.node.documents[doc[0]].append(signature)
+			return signature
 
-			print('\'{}\' has been signed by node {}'.format(doc[0],self.node.addr))
+		return None
 
-		if self.node.parent:
-			self.node.vote(doc, key=data_to_key(private_key,self.n))
 		
 	def verify(self,doc, signature):
 		'''

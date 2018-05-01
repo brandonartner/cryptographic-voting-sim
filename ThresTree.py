@@ -71,14 +71,22 @@ class TreeNode:
                 self.parent.documents[doc[0]] = [doc[1]]
 
             elif doc[1] != self.parent.documents[doc[0]][0]:
+                # Probably shouldn't be able to just change the document text like this.
                 print('Document \'{}\' has been updated and is now available for voting on.'.format(doc[0]))
                 self.parent.documents[doc[0]] = [doc[1]]
             
             if not key:
-                self.parent.voter.add_key_to_signature(self.data, doc)
+                signature = self.parent.voter.add_key_to_signature(self.data, doc)
+                if signature:
+                    self.parent.documents[doc[0]].append(signature)
+                    print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
+
         elif key:
             print('{} voted to sign {}.'.format(self.addr,doc))
-            self.parent.voter.add_key_to_signature(key, doc)
+            signature = self.parent.voter.add_key_to_signature(key, doc)
+            if signature:
+                self.parent.documents[doc[0]].append(signature)
+                print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
 
     def show_documents(self, verified_only=False):
         ''' Prints all of the documents. 
