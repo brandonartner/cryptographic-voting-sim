@@ -11,13 +11,13 @@ Project to implement a secret sharing application.<br/>
   - [ ] Should we have one master document set at the root level? or<br/>
   - [X] Have each subgroup have its own subdocument set?<br/>
 - [ ] Create visualization for audience
-- [ ] Implement key validation function
+- [X] Implement key validation function
 - [X] Implement add single node function
 - [ ] ~~Turn the toolkit into a class~~
   - [ ] Rework toolkit to actually make sense (its basically a bunch of repeated functions).
 - [X] Fix the key_to_data and data_to_key functions so upward propogations is possible
 - [ ] Create GUI
-- [ ] Implement Voter class concept into ThresTree
+- [X] Implement Voter class concept into ThresTree
 
 ## Critical To-Do
 - [ ] Fix ascii art in the README
