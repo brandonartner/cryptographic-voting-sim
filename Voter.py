@@ -14,7 +14,7 @@ class Voter:
 	"""
 
 	def __init__(self, node, n, k, prime_size=1024):
-        """
+		"""
             :Parameter node: A reference back to the node this voter belongs to.
             :Type node: TreeNode
 
@@ -44,7 +44,7 @@ class Voter:
 		self.node = node
 
 	def generate_scheme(self, data=None):
-        """Generates the private-public key pair, the polynomial, and the keys
+		"""Generates the private-public key pair, the polynomial, and the keys
 			for this voter.
 
             :Parameter data: The data to be used as the secret data. 
@@ -85,7 +85,7 @@ class Voter:
 		return self.generate_keys(poly)
 
 	def random_distinct(self, lower_bound, upper_bound, size):
-        """Generates lists of distinct random numbers,
+		"""Generates lists of distinct random numbers,
 
             :Parameter lower_bound: Low bound for searching
             :Type lower_bound: long or int
@@ -112,7 +112,7 @@ class Voter:
 		return v
 
 	def generate_polynomial(self, data):
-        """Makes a random polynomial with data as the coeficient term.
+		"""Makes a random polynomial with data as the coeficient term.
 
             :Parameter data: The data as a numeric value to be split
             :Type data: long or int
@@ -144,7 +144,7 @@ class Voter:
 		return f
 
 	def generate_keys(self, poly):
-        """Creates the keys for distributing.
+		"""Creates the keys for distributing.
 
             :Parameter poly: Polynomial function to create the keys
             :Type poly: a lambda function
@@ -166,7 +166,7 @@ class Voter:
 
 
 	def add_key_to_signature(self, key, doc):
-        """Add given key to the in progress vote 
+		"""Add given key to the in progress vote 
 
             :Parameter key: The key being added to the LIP
             :Type key: 2-tuple of ints
@@ -211,7 +211,7 @@ class Voter:
 
 
 	def firstOrderLag(self, idx):
-        """Calculates the (idx)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.
+		"""Calculates the (idx)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.
 
             :Parameter idx: The order of the next LIP
             :Type idx: int
@@ -236,7 +236,7 @@ class Voter:
 
 
 	def find_divisible_congruency(self, fraction):
-        """Calculates a congruent integer to the numerator that is divisible by the denominator.
+		"""Calculates a congruent integer to the numerator that is divisible by the denominator.
 
             :Parameter fraction: fraction, the fraction in question.
             :Type fraction: a Fraction object
@@ -261,7 +261,7 @@ class Voter:
 		return int(z)
 
 	def sign(self, doc, private_key):
-        """Function creates the digital signature for a given document with this voter's private key.
+		"""Function creates the digital signature for a given document with this voter's private key.
 
             :Parameter doc: The document that is being signed.
             :Type doc: String tuple
@@ -299,7 +299,7 @@ class Voter:
 
 		
 	def verify(self,doc, signature):
-        """Function verifies a digital signature. for a given document with this voter's public key.
+		"""Function verifies a digital signature. for a given document with this voter's public key.
 
             :Parameter doc: The document that is being signed.
             :Type doc: String
