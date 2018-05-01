@@ -14,12 +14,27 @@ class Voter:
 	"""
 
 	def __init__(self, node, n, k, prime_size=1024):
-		'''	
-			n: total number of keys for the voter
-			k: the required number of votes
-			prime_size: number of bits for the prime number, default:1024
-							Must be a multiple of 64
-		'''
+        """
+            :Parameter node: A reference back to the node this voter belongs to.
+            :Type node: TreeNode
+
+            :Parameter n: The number of key to generate for this voter.
+            :Type n: int
+
+            :Parameter k: The number of vote required to pass a vote.
+            :Type k: int
+
+            :Parameter prime_size: The number of bits for the prime number.
+            						default: 1024
+            						Must be a multiple of 128 between 512 and 1024.
+            :Type prime_size: int
+
+            :Return: None
+
+            :TODO Might want to add a current document attribute as per the todo from 
+            		add_key_to_signature.
+        """
+
 		self.prime_size = prime_size
 		self.p = number.getStrongPrime(prime_size,false_positive_prob=1e-10)
 		self.n = n
@@ -29,11 +44,20 @@ class Voter:
 		self.node = node
 
 	def generate_scheme(self, data=None):
-		'''	Generates the private-public key pair, the polynomial, and the keys
+        """Generates the private-public key pair, the polynomial, and the keys
 			for this voter.
 
-			data: If the voter is not the root voter then there should be a piece of data passed in...
-		'''
+            :Parameter data: The data to be used as the secret data. 
+        						(Note: None means the voter is for root node.)
+            :Type data: long or int
+
+            :Return: list of 2-tuples, each tuple is a key pair for the Shamir's Scheme.
+
+            :TODO Implement non-root DSA key pairs. This is to allow for signing of sub-root
+            		document sets. Problem consists of being given a private key and having to 
+        			generate a public key.
+        """
+
 		if not data:
 			print('Creating new DSA pair.')
 			# Generate the DSA public-private key pair for signing with
@@ -60,19 +84,27 @@ class Voter:
 		# Reutrn a set of keys generated from the polynomial
 		return self.generate_keys(poly)
 
-	def random_distinct(self, lo, hi, size):
-		''' Used to get lists of distinct random numbers,
+	def random_distinct(self, lower_bound, upper_bound, size):
+        """Generates lists of distinct random numbers,
 
-		    lo: Low bound for searching
-		    hi: High bound for searching
-		    
-		    Returns: Random numbers within bounds
-		'''
+            :Parameter lower_bound: Low bound for searching
+            :Type lower_bound: long or int
+
+            :Parameter upper_bound: High bound for searching
+            :Type upper_bound: long or int
+
+            :Parameter size: Length of list of numbers
+            :Type size: long or int
+
+            :Return: List of random numbers within given bounds
+
+            :TODO 
+        """
 
 		v = []
 
 		while len(v) < size:
-			rand = random.randint(lo, hi)
+			rand = random.randint(lower_bound, upper_bound)
 		    
 			if rand not in v:
 				v.append(rand)
@@ -80,12 +112,15 @@ class Voter:
 		return v
 
 	def generate_polynomial(self, data):
-		''' Makes a random polynomial with data as the coeficient term.
-			
-			data: The data as a numeric value to be split
-			
-			Returns: polynomial as a string and as a lambda function
-		'''
+        """Makes a random polynomial with data as the coeficient term.
+
+            :Parameter data: The data as a numeric value to be split
+            :Type data: long or int
+
+            :Return: polynomial as a lambda function
+
+            :TODO 
+        """
 
 		# Shamir's algorithms requires each coefficient to be distinct
 		#coefficients = random.sample((x for x in range(self.p)), self.k-1) 
@@ -109,12 +144,15 @@ class Voter:
 		return f
 
 	def generate_keys(self, poly):
-		''' Creates the keys
+        """Creates the keys for distributing.
 
-			poly: Polynomial function to create the keys
+            :Parameter poly: Polynomial function to create the keys
+            :Type poly: a lambda function
 
-			Returns: n-tuple of keys
-		'''
+            :Return: list of key pairs.
+
+            :TODO 
+        """
 
 		# create distinct x values because f(a)=f(b) iff a=b 
 		# implies less than n keys will be made
@@ -128,12 +166,21 @@ class Voter:
 
 
 	def add_key_to_signature(self, key, doc):
-		''' 
-			Adds given key and feeds forward.
+        """Add given key to the in progress vote 
 
-			Returns: soln - when k keys have been submitted, the original data
-							otherwise, None
-		'''
+            :Parameter key: The key being added to the LIP
+            :Type key: 2-tuple of ints
+
+            :Parameter doc: The document being voted on.
+            :Type doc: String 2-tuple
+
+            :Return: DSA Signature, if the vote is completed, i.e. k keys have been submitted.
+
+            :TODO Potential Bug, need to make sure only one document is being voted on at a time.
+            		Could include a blocking mechanism where the document being voted on 
+            		is compared to a saved current document and if it doesn't match the key is rejected.
+            		Then when the voting process is over clear out the current document.
+        """
 
 		# splitting the key across first two lists
 		self.values[0].append(key[0])
@@ -164,8 +211,16 @@ class Voter:
 
 
 	def firstOrderLag(self, idx):
-		''' Calculates the nth-ordered Lagrangian Interpolating Polynomial, evaluated at 0.
-		'''
+        """Calculates the (idx)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.
+
+            :Parameter idx: The order of the next LIP
+            :Type idx: int
+
+            :Return: A Fraction class, containing the value of the (idx)th LIP, evaluated at 0
+
+            :TODO I think the name of this function is missleading, should't it be nOrdLag.
+        """
+
 		j = -1
 		i = j - (idx + 1)
 
@@ -181,10 +236,16 @@ class Voter:
 
 
 	def find_divisible_congruency(self, fraction):
-		''' Calculates a congruent integer to the numerator that is divisible by the denominator.
-			Input: fraction, the fraction in question.
-			Return: The z such that z = (num + i*prime)/den and z is an integer (without trunction).
-		'''
+        """Calculates a congruent integer to the numerator that is divisible by the denominator.
+
+            :Parameter fraction: fraction, the fraction in question.
+            :Type fraction: a Fraction object
+
+            :Return: The z such that z = (num + i*prime)/den and z is an integer (without trunction).
+
+            :TODO 
+        """
+
 		# Fracction class is used here because float division can't handle crypto-secure sized numbers,
 		#  but Fraction uses integers, which can handle effectively infinite numbers
 		num = Fraction(fraction.numerator % self.p,1)
@@ -200,11 +261,21 @@ class Voter:
 		return int(z)
 
 	def sign(self, doc, private_key):
-		'''
-			Function creates the digital signature for the scheme.
-			doc: Data that is being signed
-			Return: DSA Signature
-		'''
+        """Function creates the digital signature for a given document with this voter's private key.
+
+            :Parameter doc: The document that is being signed.
+            :Type doc: String tuple
+
+            :Parameter private_key: The private key for the DSA pair. (Comes from add_key_to_signature)
+            :Type private_key: long or int
+
+            :Return: A signature if this node has a public key, else None.
+
+            :TODO Right now the doc param is a string 2-tuple, this might be better as just a String
+            		since all that is needed is the document text and it would be more intuitive 
+            		for future users.
+        """
+
 		# Sign the document. 
 		# If voter is a subvoter, also send key to parent.
 		#
@@ -228,11 +299,19 @@ class Voter:
 
 		
 	def verify(self,doc, signature):
-		'''
-			Function verifies a digital signature.
-			doc: Data that is being signed
-			Return: Digital Signature
-		'''
+        """Function verifies a digital signature. for a given document with this voter's public key.
+
+            :Parameter doc: The document that is being signed.
+            :Type doc: String
+
+            :Parameter signature: DSA signature being verified.
+            :Type signature: long 2-tuple
+
+            :Return: True if the voter has a public key and the signature is correct, False otherwise.
+
+            :TODO 
+        """
+
 		if self.pubKey:
 			m = hashlib.sha256()
 			m.update(doc.encode())
