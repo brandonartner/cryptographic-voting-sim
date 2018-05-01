@@ -5,7 +5,7 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.contrib.completers import WordCompleter
 from fuzzyfinder import fuzzyfinder
-from pygments.lexers.python import Python3Lexer
+#from pygments.lexers.python import Python3Lexer
 from VoteSim import VoteSim
 import sys
 import traceback
@@ -155,7 +155,7 @@ class TreeMaker():
 				                        completer=CommandCompleter,
 				                        # uses python3 syntax highlighting
 				                        # this might be pointless
-				                        lexer=Python3Lexer,
+				                        #lexer=Python3Lexer,
 				                        )
 				else:
 					user_input = input('>>>')

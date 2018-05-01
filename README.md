@@ -1,6 +1,22 @@
 # SecretSharingProject
 Project to implement a secret sharing application.<br/>
 <br/>
+
+## Required Libraries:
+```
+pip install fuzzyfinder
+pip install pycrypto
+```
+
+## To Run:
+```
+python TreeMaker.py
+```
+or (for testing purposes)
+```
+python TreeMaker.py < config.txt
+```
+
 ## To-Do:
 - [X] Implement Legrangian Polynomial Interpolation
 - [X] Update Polynomial Interpolation to Neville's Method, to allow for incremental construction of data
