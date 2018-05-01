@@ -215,7 +215,7 @@ class Voter:
 			dsa = DSA.construct((self.pubKey, self.subgroup_generator, self.p, self.subgroup_order, key_to_data(private_key,self.n)))
 			m = hashlib.sha256()
 			m.update(doc[1].encode())
-			signature = dsa.sign(m.digest(),private_key[1])
+			signature = dsa.sign(m.digest(),random.randint(1,self.subgroup_order-1))
 
 			self.node.documents[doc[0]].append(signature)
 
