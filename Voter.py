@@ -39,11 +39,9 @@ class Voter:
 			# Generate the DSA public-private key pair for signing with
 			key = DSA.generate(self.prime_size)
 			# Set the prime equal to the modulus from the DSA key set
-			self.p = key.p
-			self.subgroup_order = key.q
-			self.subgroup_generator = key.g
+			self.pubKey = key.publickey()
+			self.p = self.pubKey.p
 			# Set the public key to the public key from the DSA key set
-			self.pubKey = key.y
 			data = key.x
 		'''
 		else:
@@ -209,20 +207,23 @@ class Voter:
 		# Sign the document. 
 		# If voter is a subvoter, also send key to parent.
 		#
-		private_key = data_to_key(private_key,self.n)
 
 		if self.pubKey:
-			dsa = DSA.construct((self.pubKey, self.subgroup_generator, self.p, self.subgroup_order, key_to_data(private_key,self.n)))
+			key = DSA.construct((self.pubKey.y, self.pubKey.g, self.pubKey.p, self.pubKey.q, private_key))
+
 			m = hashlib.sha256()
 			m.update(doc[1].encode())
-			signature = dsa.sign(m.digest(),random.randint(1,self.subgroup_order-1))
+			h = m.digest()
+			k = random.StrongRandom().randint(1,key.q-1)
+
+			signature = key.sign(h,k)
 
 			self.node.documents[doc[0]].append(signature)
 
-		print('\'{}\' has been signed by node {}'.format(doc[0],self.node.addr))
+			print('\'{}\' has been signed by node {}'.format(doc[0],self.node.addr))
 
 		if self.node.parent:
-			self.node.vote(doc, key=private_key)
+			self.node.vote(doc, key=data_to_key(private_key,self.n))
 		
 	def verify(self,doc, signature):
 		'''
@@ -231,9 +232,10 @@ class Voter:
 			Return: Digital Signature
 		'''
 		if self.pubKey:
-			dsa = DSA.construct((self.pubKey, self.subgroup_generator, self.p, self.subgroup_order))
 			m = hashlib.sha256()
 			m.update(doc.encode())
-			return dsa.verify(m.digest(),signature)
+			h = m.digest()
+
+			return self.pubKey.verify(h,signature)
 
 		return False

@@ -86,7 +86,6 @@ class TreeNode:
         print('\n-------------------------------------')
         for docname,doc in self.documents.items():
             if len(doc)==2:
-                print(doc)
                 verified = self.voter.verify(doc[0],doc[1])
             else:
                 verified = False
