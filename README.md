@@ -32,4 +32,3 @@ H---PrK......PuK----<br/>
 <br/>
 Active Branches:<br/>
 <br/>
-- Django_App: Not actually making a Django app but this branch has all the new stuff.s<br/>
