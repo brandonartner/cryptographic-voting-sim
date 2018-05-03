@@ -87,9 +87,13 @@ class VoteSim():
 	def repl(self):
 		"""REPL function to simulate a vote. Loops until quit is called.
 		"""
-		print('Now Simulating a Vote. Enter h for list of commands.')
+		print((	'\n###########################################################'
+				'\n### Now Simulating a Vote. Enter h for list of commands. ##'
+				'\n###########################################################\n'))
+
 		while 1:
 			try:
+				print('\nThe current vote at the root is {}.\n'.format(self.tree.root.current_vote))
 				# if the input stream is from keyboard use fancy repl, if not use basic
 				if sys.stdin.isatty():
 					user_input = prompt(u'>>>',

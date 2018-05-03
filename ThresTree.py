@@ -24,6 +24,8 @@ class TreeNode:
         self.documents = {}
         self.voter = None
         self.finalized = False
+        self.current_vote = None
+
 
     def split(self, n, k):
         """Split a node from being a leaf to having children.
@@ -55,6 +57,7 @@ class TreeNode:
             child = TreeNode(childAddr, self)
 
             self.children[childAddr] = child
+
 
     def finalize(self, data=None):
         """Creates a voter object for each non-leaf node and sets key data for each leaf.
@@ -92,6 +95,7 @@ class TreeNode:
         else:
             print('Error: Node at {} is already finalized.'.format(self.addr))
 
+
     def vote(self, doc, key=None):
         """Votes on a given document
 
@@ -99,39 +103,49 @@ class TreeNode:
                                 document's text.
             :Type doc: String tuple
 
-            :Parameter key: key data from parent nodes
+            :Parameter key: key data passed up from child nodes
             :Type key: int tuple
 
             :Return: None
 
-            :TODO 
+            :TODO Turn current_vote into a queue of documents waiting to be voted on.
         """
 
-        # sends data, transformed back into a key, to the parent nodes voter class
         if hasattr(self, 'data'):
-            print('{} voted to sign {}.'.format(self.addr,doc))
+            # if the node has data, then it is a leaf and its key is added to the active vote.
 
             if not self.parent.documents.get(doc[0]):
-                print('Document \'{}\' is now available for voting on.'.format(doc[0]))
+                # If the document being voted on isn't in the documents list, add it
+                print('Document \'{}\' has been added to {}\'s documents list.'.format(doc[0], self.parent.addr))
                 self.parent.documents[doc[0]] = [doc[1]]
 
             elif doc[1] != self.parent.documents[doc[0]][0]:
+                # If the document being voted on is different in the documents list, update it?
                 # Probably shouldn't be able to just change the document text like this.
                 print('Document \'{}\' has been updated and is now available for voting on.'.format(doc[0]))
                 self.parent.documents[doc[0]] = [doc[1]]
-            
-            if not key:
-                signature = self.parent.voter.add_key_to_signature(self.data, doc)
-                if signature:
-                    self.parent.documents[doc[0]].append(signature)
-                    print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
+
+            self.__send_vote(doc, self.data)
 
         elif key:
+            self.__send_vote(doc, key)
+
+
+    def __send_vote(self, doc, key):
+
+        if not self.parent.current_vote or self.parent.current_vote == doc:
+            # if there isn't another document being voted on
             print('{} voted to sign {}.'.format(self.addr,doc))
             signature = self.parent.voter.add_key_to_signature(key, doc)
-            if signature:
+            self.parent.current_vote = doc
+
+            if signature and self.parent:
                 self.parent.documents[doc[0]].append(signature)
                 print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
+                self.parent.current_vote = None
+        else:
+            print('{} tried to vote to sign {}, but {} is being voted on.'.format(self.addr,doc,self.current_vote))
+
 
     def show_documents(self, verified_only=False):
         """Displays all of the documents for root.
@@ -161,6 +175,7 @@ class TreeNode:
                 print('Document is Signed.\n')
 
             print('-------------------------------------')
+
 
 class ThresTree:
     ''' Tree designed to be used with
