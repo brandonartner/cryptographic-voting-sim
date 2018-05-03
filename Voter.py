@@ -204,10 +204,12 @@ class Voter:
 
 		# if there are k elements, than we are done, delete all elements and return the last value
 		if len(self.values[0]) == self.k:
-			temp = self.sign(doc, self.values[-1][0])
+			signature = self.sign(doc, self.values[-1][0])
 			for i in range(len(self.values)):
 				self.values[i] = []
-			return temp
+			return signature, True
+
+		return None, False
 
 
 	def firstOrderLag(self, idx):

@@ -132,16 +132,31 @@ class TreeNode:
 
 
     def __send_vote(self, doc, key):
+        """Private helper function, submit the vote and ensures that the document is the one being voted on.
+
+            :Parameter doc: The document being voted on. First element is the file name. Second is the 
+                                document's text.
+            :Type doc: String tuple
+
+            :Parameter key: key data being sent for a vote.
+            :Type key: int tuple
+
+            :Return: None
+
+            :TODO Turn current_vote into a queue of documents waiting to be voted on.
+        """
 
         if not self.parent.current_vote or self.parent.current_vote == doc:
-            # if there isn't another document being voted on
+            # if there isn't a different document being voted on
             print('{} voted to sign {}.'.format(self.addr,doc))
-            signature = self.parent.voter.add_key_to_signature(key, doc)
             self.parent.current_vote = doc
+            signature, vote_finished = self.parent.voter.add_key_to_signature(key, doc)
 
             if signature and self.parent:
                 self.parent.documents[doc[0]].append(signature)
                 print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
+                self.parent.current_vote = None
+            elif vote_finished and self.parent:
                 self.parent.current_vote = None
         else:
             print('{} tried to vote to sign {}, but {} is being voted on.'.format(self.addr,doc,self.current_vote))
@@ -283,13 +298,15 @@ class ThresTree:
         self.finalized = True
 
     def display(self):
+        print('--------------------------------------------------')
         self.displayHelper(self.root, 0)
+        print('--------------------------------------------------')
 
     def displayHelper(self, node, depth):
         if hasattr(node, 'data'):
-            print('{}{} - [{},{}]'.format(depth*'\t', node.addr, node.data[0], hex(node.data[1])))
-        else:
             print('{}{}'.format(depth*'\t', node.addr))
+        else:
+            print('{}{} - Currently Voting On: {}'.format(depth*'\t', node.addr, node.current_vote))
 
         if hasattr(node, 'children'):
             for child in node.children.values():
