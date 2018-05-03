@@ -8,13 +8,22 @@ pip install fuzzyfinder
 pip install pycrypto
 ```
 
-## To Run:
+## Usage:
+### Constructing an organization:
 ```
 python TreeMaker.py
 ```
 or (for testing purposes)
 ```
 python TreeMaker.py < config.txt
+```
+### Simulating a vote:
+```
+python VoteSim.py
+```
+or (for testing purposes)
+```
+python VoteSim.py < vote_sim1.txt
 ```
 
 ## To-Do:
