@@ -130,7 +130,11 @@ if __name__ == '__main__':
 	
 	f = open('organization.txt','rb')
 	org = pickle.load(f)
+	f.close()
 
 	voteSim = VoteSim(org)
 	voteSim.repl()
+
+	f = open('organization.txt','wb')
+	pickle.dump(org,f)
 	f.close()

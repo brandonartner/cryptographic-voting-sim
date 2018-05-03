@@ -46,3 +46,5 @@ Thumbs.db
 __pycache__/
 history\.txt
 voting_history\.txt
+
+organization\.txt

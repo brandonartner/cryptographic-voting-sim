@@ -1,10 +1,9 @@
 display
 vote 0:1:2 test_doc.txt
-display
 vote 0:1:1 test_doc.txt
 vote 0:3 test_doc2.txt
-display
 vote 0:3 test_doc.txt
+vote 0:3 test_doc2.txt
 display
 documents
 quit

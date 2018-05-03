@@ -25,6 +25,7 @@ class TreeNode:
         self.voter = None
         self.finalized = False
         self.current_vote = None
+        self.already_voted = []
 
 
     def split(self, n, k):
@@ -110,6 +111,9 @@ class TreeNode:
 
             :TODO Turn current_vote into a queue of documents waiting to be voted on.
         """
+        if self.addr in self.parent.already_voted:
+            print('{} has already voted in the current vote.'.format(self.addr))
+            return
 
         if hasattr(self, 'data'):
             # if the node has data, then it is a leaf and its key is added to the active vote.
@@ -117,13 +121,13 @@ class TreeNode:
             if not self.parent.documents.get(doc[0]):
                 # If the document being voted on isn't in the documents list, add it
                 print('Document \'{}\' has been added to {}\'s documents list.'.format(doc[0], self.parent.addr))
-                self.parent.documents[doc[0]] = [doc[1]]
+                self.parent.documents[doc[0]] = [doc[1],(0,0)]
 
             elif doc[1] != self.parent.documents[doc[0]][0]:
                 # If the document being voted on is different in the documents list, update it?
                 # Probably shouldn't be able to just change the document text like this.
                 print('Document \'{}\' has been updated and is now available for voting on.'.format(doc[0]))
-                self.parent.documents[doc[0]] = [doc[1]]
+                self.parent.documents[doc[0]] = [doc[1],(0,0)]
 
             self.__send_vote(doc, self.data)
 
@@ -150,14 +154,19 @@ class TreeNode:
             # if there isn't a different document being voted on
             print('{} voted to sign {}.'.format(self.addr,doc))
             self.parent.current_vote = doc
+            self.parent.already_voted.append(self.addr)
             signature, vote_finished = self.parent.voter.add_key_to_signature(key, doc)
 
             if signature and self.parent:
-                self.parent.documents[doc[0]].append(signature)
+                self.parent.documents[doc[0]][1] = signature
                 print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
                 self.parent.current_vote = None
+
+                self.parent.already_voted = []
+
             if vote_finished and self.parent:
                 self.parent.current_vote = None
+                self.parent.already_voted = []
         else:
             print('{} tried to vote to sign {}, but {} is being voted on.'.format(self.addr,doc,self.current_vote))
 
