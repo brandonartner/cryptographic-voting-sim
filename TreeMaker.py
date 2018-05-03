@@ -9,7 +9,7 @@ from fuzzyfinder import fuzzyfinder
 from VoteSim import VoteSim
 import sys
 import traceback
-
+import pickle
 
 commands = {'add': ['Adds a child node to the specified node in the tree.',
 					('add #:#:#:...\n'
@@ -178,5 +178,9 @@ if __name__ == '__main__':
 	treeMaker = TreeMaker()
 	org = treeMaker.repl()
 	
-	voteSim = VoteSim(org)
-	voteSim.repl()
+	f = open('organization.txt','wb+')
+	pickle.dump(org,f)
+
+	f.close()
+	#voteSim = VoteSim(org)
+	#voteSim.repl()

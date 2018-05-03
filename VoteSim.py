@@ -7,6 +7,7 @@ from prompt_toolkit.contrib.completers import WordCompleter
 from fuzzyfinder import fuzzyfinder
 #from pygments.lexers.python import Python3Lexer
 import sys
+import pickle
 
 commands = {'vote': ['vote addr filename','No Usage Info'],
 			
@@ -122,3 +123,14 @@ class VoteSim():
 				print(e.args[0] + ': invalid use.\nTry \'help [command]\' or \'h [command]\'.')
 			except AssertionError as e:
 				print(e.args[0])
+
+
+
+if __name__ == '__main__':
+	
+	f = open('organization.txt','rb')
+	org = pickle.load(f)
+
+	voteSim = VoteSim(org)
+	voteSim.repl()
+	f.close()

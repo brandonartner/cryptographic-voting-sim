@@ -156,7 +156,7 @@ class TreeNode:
                 self.parent.documents[doc[0]].append(signature)
                 print('\'{}\' has been signed by node {}'.format(doc[0],self.parent.addr))
                 self.parent.current_vote = None
-            elif vote_finished and self.parent:
+            if vote_finished and self.parent:
                 self.parent.current_vote = None
         else:
             print('{} tried to vote to sign {}, but {} is being voted on.'.format(self.addr,doc,self.current_vote))
