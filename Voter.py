@@ -31,8 +31,7 @@ class Voter:
 
             :Return: None
 
-            :TODO Might want to add a current document attribute as per the todo from 
-            		add_key_to_signature.
+            :TODO 
         """
 
 		self.prime_size = prime_size
@@ -176,10 +175,7 @@ class Voter:
 
             :Return: DSA Signature, if the vote is completed, i.e. k keys have been submitted.
 
-            :TODO Potential Bug, need to make sure only one document is being voted on at a time.
-            		Could include a blocking mechanism where the document being voted on 
-            		is compared to a saved current document and if it doesn't match the key is rejected.
-            		Then when the voting process is over clear out the current document.
+            :TODO 
         """
 
 		# splitting the key across first two lists
@@ -278,14 +274,12 @@ class Voter:
             		for future users.
         """
 
-		# Sign the document. 
-		# If voter is a subvoter, also send key to parent.
-		#
-
 		if self.node.parent:
+			# If voter is a subvoter, also send key to parent.
 			self.node.vote(doc, key=data_to_key(private_key,self.n))
 
 		if self.pubKey:
+			# Sign the document. 
 			key = DSA.construct((self.pubKey.y, self.pubKey.g, self.pubKey.p, self.pubKey.q, private_key))
 
 			m = hashlib.sha256()
