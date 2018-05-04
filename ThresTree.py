@@ -1,3 +1,5 @@
+import base64 as b64
+
 from Toolkit import *
 from Voter import Voter
 
@@ -111,6 +113,7 @@ class ThresTree:
             child = TreeNode(childAddr, node)
 
             node.children[childAddr] = child
+            node.n += 1
 
         else:
             print('Cannot add to unsplit node.')
@@ -123,7 +126,13 @@ class ThresTree:
             return
 
         node = self.search(addr)
+
+        if node.n-1 < node.k:
+            print('Node has threshold {} and number of children {}.'.format(node.k, node.n))
+            print('Cannot remove anymore children.')
+
         childAddr = '{}:{}'.format(node.addr, len(node.children.keys()))
+        node.n -= 1
 
         del(node.children[childAddr])
 
@@ -141,9 +150,14 @@ class ThresTree:
 
     def displayHelper(self, node, depth):
         if hasattr(node, 'data'):
-            print('{}{} - [{},{}]'.format(depth*'\t', node.addr, node.data[0], hex(node.data[1])))
+            #d = b64.b64encode('{}'.format(node.data[1]).encode('ascii'))
+            #d = base_convert(node.data[1], 94)
+            print('{}{} - [{},{:.2E}]'.format(depth*'\t', node.addr, node.data[0], node.data[1]))
         else:
-            print('{}{}'.format(depth*'\t', node.addr))
+            if hasattr(node, 'k'):
+                print('{}{}({}, {})'.format(depth*'\t', node.addr, node.n, node.k))
+            else:
+                print('{}{}'.format(depth*'\t', node.addr))
 
         if hasattr(node, 'children'):
             for child in node.children.values():

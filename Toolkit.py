@@ -1,6 +1,7 @@
 import numpy as np
 from Crypto.Util import number
 import math
+import string
 
 from fractions import Fraction
 
@@ -183,6 +184,15 @@ def next_multiple_of_128(data):
     bin_data_len = len(bin(data)[2:]) 
 
     return math.ceil(bin_data_len/128)*128
+
+def base_convert(n, base):
+    digits = string.printable[:-6]
+    
+    if n < base:
+        return digits[n]
+
+    else:
+        return base_convert(n//base, base) + digits[n%base]
 
 if __name__ == '__main__':
     from SlowNeville import SlowNeville
