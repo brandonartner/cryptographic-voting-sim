@@ -88,9 +88,9 @@ class VoteSim():
 	def repl(self):
 		"""REPL function to simulate a vote. Loops until quit is called.
 		"""
-		print((	'\n###########################################################'
-				'\n### Now Simulating a Vote. Enter h for list of commands. ##'
-				'\n###########################################################\n'))
+		print((	'\n####################################################################'
+				'\n### Now in an Active Vote Session. Enter h for list of commands. ###'
+				'\n####################################################################\n'))
 
 		while 1:
 			try:
@@ -128,13 +128,23 @@ class VoteSim():
 
 if __name__ == '__main__':
 	
-	f = open('organization.txt','rb')
+	try:
+		f = open(sys.argv[1],'rb')
+	except Exception as e:
+		print('Loading failed. \'{}\' Doesn\'t exist.'.format(sys.argv[1]))
+		sys.exit()
+
 	org = pickle.load(f)
 	f.close()
 
 	voteSim = VoteSim(org)
 	voteSim.repl()
 
-	f = open('organization.txt','wb')
+	try:
+		f = open(sys.argv[1],'wb')
+	except Exception as e:
+		print('Save Failed. \'{}\' Doesn\'t exist.'.format(sys.argv[1]))
+		sys.exit()
+
 	pickle.dump(org,f)
 	f.close()

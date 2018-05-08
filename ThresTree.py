@@ -74,7 +74,11 @@ class TreeNode:
         if not self.finalized:
 
             if hasattr(self,'children'):
-                print('Initializing voter for {} with data {}.'.format(self.addr,data))
+                if data:
+                    print('Initializing voter for {} with data:\n ({},{}).\n'.format(self.addr, data[0], base_convert(data[1],92)))
+                else:
+                    print('Initializing voter for {} with data:\n {}.'.format(self.addr,data))
+
                 # should this check if data is a key pair
                 if data:
                     data = key_to_data(data, self.n)
@@ -91,7 +95,7 @@ class TreeNode:
                     child.finalize(keys[i])
 
             else:
-                print('{} has gotten the data {}.'.format(self.addr,data))
+                print('{} has gotten the data:\n ({},{}).\n'.format(self.addr, data[0], base_convert(data[1],92)))
                 self.data = data
         else:
             print('Error: Node at {} is already finalized.'.format(self.addr))

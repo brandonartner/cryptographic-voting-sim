@@ -1,6 +1,7 @@
 import numpy as np
 from Crypto.Util import number
 import math
+import string
 
 from fractions import Fraction
 
@@ -189,6 +190,15 @@ def convvert_to_PEM(private_key):
     '''
     base64_key = 0
 
+def base_convert(n, base):
+    digits = string.printable[:-6]
+    
+    if n < base:
+        return digits[n]
+
+    else:
+        return base_convert(n//base, base) + digits[n%base]
+        
 if __name__ == '__main__':
     from SlowNeville import SlowNeville
 

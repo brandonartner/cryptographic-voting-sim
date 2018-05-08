@@ -6,7 +6,6 @@ from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.contrib.completers import WordCompleter
 from fuzzyfinder import fuzzyfinder
 #from pygments.lexers.python import Python3Lexer
-from VoteSim import VoteSim
 import sys
 import traceback
 import pickle
@@ -161,6 +160,9 @@ class TreeMaker():
 					user_input = input('>>>')
 
 				if user_input == 'q' or user_input == 'quit':
+					print((	'#################################'
+							'\nFinal Organization Tree Structure:\n'))
+					self.tree.display()
 					return self.tree
 
 				self.parse(user_input)
@@ -178,9 +180,13 @@ if __name__ == '__main__':
 	treeMaker = TreeMaker()
 	org = treeMaker.repl()
 	
-	f = open('organization.txt','wb+')
+	# TODO: This should probably be done in a saving function in TreeMaker class.
+	try:
+		f = open(sys.argv[1],'wb+')
+	except Exception as e:
+		print('Default Save. {} failed.'.format(sys.argv[1]))
+		f = open('organization.txt','wb+')
+
 	pickle.dump(org,f)
 
 	f.close()
-	#voteSim = VoteSim(org)
-	#voteSim.repl()
