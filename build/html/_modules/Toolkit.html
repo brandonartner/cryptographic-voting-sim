@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Toolkit &mdash; SecretSharingProject 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SecretSharingProject
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SecretSharingProject</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>Toolkit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for Toolkit</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">Crypto.Util</span> <span class="k">import</span> <span class="n">number</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">string</span>
+
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="k">import</span> <span class="n">Fraction</span>
+
+<div class="viewcode-block" id="Polynomial"><a class="viewcode-back" href="../index.html#Toolkit.Polynomial">[docs]</a><span class="k">class</span> <span class="nc">Polynomial</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39; Class to evaluate simulated polynomials &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coefficients</span> <span class="o">=</span> <span class="n">coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coefficients</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coefficients</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">stringify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coefficients</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">*x**</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span>
+
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="prime_generator"><a class="viewcode-back" href="../index.html#Toolkit.prime_generator">[docs]</a><span class="k">def</span> <span class="nf">prime_generator</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Generates a random prime number</span>
+<span class="sd">    </span>
+<span class="sd">        lo: Low bound for searching</span>
+<span class="sd">        hi: High bound for searching</span>
+<span class="sd">        </span>
+<span class="sd">        Returns: Random prime within bounds</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">return</span> <span class="mi">1004137</span> <span class="c1"># totally random</span></div>
+    <span class="c1">#return number.getStrongPrime(prime_size,false_positive_prob=1e-10) # totally random (yes... yes it is)</span>
+
+<div class="viewcode-block" id="random_distinct"><a class="viewcode-back" href="../index.html#Toolkit.random_distinct">[docs]</a><span class="k">def</span> <span class="nf">random_distinct</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Used to get lists of distinct random numbers,</span>
+<span class="sd">    </span>
+<span class="sd">        lo: Low bound for searching</span>
+<span class="sd">        hi: High bound for searching</span>
+<span class="sd">        </span>
+<span class="sd">        Returns: Random numbers within bounds</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">v</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">rand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="n">v</span></div>
+
+<span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="n">copy</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span> <span class="p">]</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">copy</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+        
+    <span class="k">return</span> <span class="n">ys</span>
+
+<div class="viewcode-block" id="generate_polynomial"><a class="viewcode-back" href="../index.html#Toolkit.generate_polynomial">[docs]</a><span class="k">def</span> <span class="nf">generate_polynomial</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Makes a random polynomial</span>
+<span class="sd">    </span>
+<span class="sd">        data: The data as a numeric value to be split</span>
+<span class="sd">        degree: The degree of the polynomial, and the minimum number of keys needed to decrypt</span>
+<span class="sd">        </span>
+<span class="sd">        Returns: polynomial as a function</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="c1"># will eventually give random primes greater than max{n, data}</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">prime_generator</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    
+    <span class="c1"># Shamir&#39;s algorithms requires each coefficient to be distinct</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">random_distinct</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># set data as 0th degree term</span>
+    <span class="n">coefficients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="n">polynomial</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">polynomial</span><span class="p">,</span> <span class="n">p</span></div>
+
+<div class="viewcode-block" id="generate_keys"><a class="viewcode-back" href="../index.html#Toolkit.generate_keys">[docs]</a><span class="k">def</span> <span class="nf">generate_keys</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Creates the keys</span>
+<span class="sd">    </span>
+<span class="sd">        n: Number of keys to be created</span>
+<span class="sd">        poly: Polynomial function to create the keys</span>
+<span class="sd">        p: Prime number for modular arithmetic</span>
+<span class="sd">        </span>
+<span class="sd">        Returns: n 2-tuples of keys</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="c1"># create distinct x values because f(a)=f(b) iff a=b </span>
+    <span class="c1"># implies less than n keys may be made</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># get corresponding y values</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span></div>
+
+<span class="k">def</span> <span class="nf">find_congruence_with_divisibility</span><span class="p">(</span><span class="n">soln</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="n">soln</span><span class="o">.</span><span class="n">numerator</span> <span class="o">%</span> <span class="n">p</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">soln</span><span class="o">.</span><span class="n">denominator</span> <span class="o">%</span> <span class="n">p</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
+
+    <span class="k">while</span> <span class="n">z</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
+
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<div class="viewcode-block" id="decrypt"><a class="viewcode-back" href="../index.html#Toolkit.decrypt">[docs]</a><span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Uses Lagrange interpolation to decrypt data</span>
+<span class="sd">    </span>
+<span class="sd">        keys: List of keys to use in the decryption</span>
+<span class="sd">        p: Prime number used to create finite field</span>
+<span class="sd">        </span>
+<span class="sd">        Returns: Decrypted data</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">keys</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>   
+        <span class="n">product</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>      
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">continue</span>
+                
+            <span class="n">product</span> <span class="o">*=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">value</span> <span class="o">+=</span> <span class="n">product</span>
+        
+    <span class="k">return</span> <span class="n">find_congruence_with_divisibility</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">key_to_data</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">key</span>
+    
+    <span class="n">xbin</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">ybin</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">y</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+
+    <span class="c1"># This now pads to make the first number the same bit length of the prime</span>
+    <span class="n">databin</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span> <span class="o">+</span><span class="n">xbin</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]))</span> <span class="o">+</span> <span class="n">ybin</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">databin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="k">def</span> <span class="nf">data_to_key</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">databin</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">prime_bit_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">2</span><span class="p">:])</span>
+
+    <span class="n">xbin</span> <span class="o">=</span> <span class="n">databin</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">prime_bit_len</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">#xbin = databin[:len(databin)/2]</span>
+    <span class="n">ybin</span> <span class="o">=</span> <span class="n">databin</span><span class="p">[</span><span class="n">prime_bit_len</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="o">+</span><span class="n">xbin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="o">+</span><span class="n">ybin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">key</span>
+
+<div class="viewcode-block" id="next_multiple_of_128"><a class="viewcode-back" href="../index.html#Toolkit.next_multiple_of_128">[docs]</a><span class="k">def</span> <span class="nf">next_multiple_of_128</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the smallest number of bits bigger than the length of data and a multiple of 128.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">bin_data_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">2</span><span class="p">:])</span> 
+
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">bin_data_len</span><span class="o">/</span><span class="mi">128</span><span class="p">)</span><span class="o">*</span><span class="mi">128</span></div>
+
+<div class="viewcode-block" id="convvert_to_PEM"><a class="viewcode-back" href="../index.html#Toolkit.convvert_to_PEM">[docs]</a><span class="k">def</span> <span class="nf">convvert_to_PEM</span><span class="p">(</span><span class="n">private_key</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Converts a private key integer to PEM format</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">base64_key</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<span class="k">def</span> <span class="nf">base_convert</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+    <span class="n">digits</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">printable</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">base</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">digits</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">base_convert</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="n">base</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span> <span class="o">+</span> <span class="n">digits</span><span class="p">[</span><span class="n">n</span><span class="o">%</span><span class="n">base</span><span class="p">]</span>
+        
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">SlowNeville</span> <span class="k">import</span> <span class="n">SlowNeville</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)-thresholding scheme&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+    <span class="n">D</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original data:&#39;</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="n">polynomial</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">generate_polynomial</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Arithmetic modulo&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Created polynomial:&#39;</span><span class="p">,</span> <span class="n">polynomial</span><span class="o">.</span><span class="n">stringify</span><span class="p">())</span>
+
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">generate_keys</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">polynomial</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generated key:&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="n">not_enough_keys</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">enough_keys</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Incorrectly decrypted data:&#39;</span><span class="p">,</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">not_enough_keys</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Correctly decrypted data:&#39;</span><span class="p">,</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">enough_keys</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ty Danet, Brandon Artner.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

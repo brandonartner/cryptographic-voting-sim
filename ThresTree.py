@@ -2,21 +2,30 @@ from Toolkit import *
 from Voter import Voter
 
 class TreeNode:
-    ''' Nodes used by the Tree object
-    '''
+    """ Nodes used by the Tree object
+
+    Attributes:
+        addr (String): Address of this node.
+        parent (TreeNode): Parent node.
+        documents (list): Documents list.
+        voter (Voter): Voter object.
+        finalized (boolean): Keeps track of whether this node has been finalized.
+        current_vote (String, String): The documents that is currently being voted on.
+        already_voted (list): List of node address that have already voted.
+
+    Note:
+        already_voted variable is only used if this node has child nodes.
+
+    """
 
     def __init__(self, addr, parent=None):
         """Split a node from being a leaf to having children.
 
-            :Parameter addr: The address of the node
-            :Type addr: String, of the format '#:#:#:...'
+        Args:
+            addr (String): The address of the node with the format '#:#:#:...'
 
-            :Parameter parent: The parent node.
-            :Type parent: TreeNode
-
-            :Return: None
-
-            :TODO 
+            parent (TreeNode): The parent node.
+ 
         """
 
         self.addr = addr
@@ -31,15 +40,11 @@ class TreeNode:
     def split(self, n, k):
         """Split a node from being a leaf to having children.
 
-            :Parameter n: The number of key to generate for this voter.
-            :Type n: int
+        Args:
+            n (int): The number of key to generate for this voter.
 
-            :Parameter k: The number of vote required to pass a vote.
-            :Type k: int
-
-            :Return: None
-
-            :TODO 
+            k (int): The number of vote required to pass a vote.
+ 
         """
 
         assert n >= k, 'n<k: invalid arguements. n must be greater than or equal to k.'
@@ -63,12 +68,12 @@ class TreeNode:
     def finalize(self, data=None):
         """Creates a voter object for each non-leaf node and sets key data for each leaf.
 
-            :Parameter data: key data from parent nodes
-            :Type data: int tuple
+        Args: 
+            data (int, int): key data from parent nodes
 
-            :Return: True if the signature is correct, False otherwise.
-
-            :TODO 
+        Returns: 
+            boolean: True if the signature is correct, False otherwise.
+ 
         """
 
         if not self.finalized:
@@ -104,16 +109,13 @@ class TreeNode:
     def vote(self, doc, key=None):
         """Votes on a given document
 
-            :Parameter doc: The document being voted on. First element is the file name. Second is the 
-                                document's text.
-            :Type doc: String tuple
+        Args: 
+            doc (String, String): The document being voted on. First element is the file name. Second is the document's text.
 
-            :Parameter key: key data passed up from child nodes
-            :Type key: int tuple
+            key (int, int): key data passed up from child nodes
 
-            :Return: None
-
-            :TODO Turn current_vote into a queue of documents waiting to be voted on.
+        Todo: 
+            Turn current_vote into a queue of documents waiting to be voted on.
         """
         if self.addr in self.parent.already_voted:
             print('{} has already voted in the current vote.'.format(self.addr))
@@ -142,16 +144,13 @@ class TreeNode:
     def __send_vote(self, doc, key):
         """Private helper function, submit the vote and ensures that the document is the one being voted on.
 
-            :Parameter doc: The document being voted on. First element is the file name. Second is the 
-                                document's text.
-            :Type doc: String tuple
+        Args:
+            doc (String, String): The document being voted on. First element is the file name. Second is the document's text.
 
-            :Parameter key: key data being sent for a vote.
-            :Type key: int tuple
+            key (int, int): key data being sent for a vote.
 
-            :Return: None
-
-            :TODO Turn current_vote into a queue of documents waiting to be voted on.
+        Todo: 
+            Turn current_vote into a queue of documents waiting to be voted on.
         """
 
         if not self.parent.current_vote or self.parent.current_vote == doc:
@@ -178,14 +177,12 @@ class TreeNode:
     def show_documents(self, verified_only=False):
         """Displays all of the documents for root.
 
-            :Parameter verified_only: Flag to only print verified/signed documents
-            :Type verified_only: boolean
+        Args: 
+            verified_only (boolean): Flag to only print verified/signed documents
 
-            :Return: None
-
-            :TODO Implement this for all levels of ducument sets. e.g. print documents for 
-                    address 0:2.
-                    Requires implementing DSA signing on all levels.
+        Todo: 
+            Implement this for all levels of ducument sets. e.g. print documents for address 0:2. 
+            Requires implementing DSA signing on all levels.
         """
 
         print('\n-------------------------------------')
@@ -206,9 +203,12 @@ class TreeNode:
 
 
 class ThresTree:
-    ''' Tree designed to be used with
-        Adi Shamir's (n, k)-thresholding scheme
-    '''
+    """ Tree designed to be used with Adi Shamir's (n, k)-thresholding scheme.
+
+    Attributes:
+        root (TreeNode): The root node of the tree.
+
+    """
 
     def __init__(self):
         self.root = TreeNode('0')
@@ -216,13 +216,12 @@ class ThresTree:
     def search(self, name):
         """Searches for a node at a given address.
 
-            :Parameter name: Address of node.
-            :Type name: String, of the format '#:#:#:...'
+        Args: 
+            name (String): Address of node with the format '#:#:#:...'.
 
-            :Return: A node with the corresponding address.
-            :Type: TreeNode
-
-            :TODO 
+        Returns: 
+            TreeNode: A node with the corresponding address.
+ 
         """
 
         if name == '0':
@@ -246,12 +245,9 @@ class ThresTree:
     def addChild(self, addr):
         """Add a child node to a node at a given address.
 
-            :Parameter addr: Address of node that new node is being added to.
-            :Type addr: String, of the format '#:#:#:...'
-
-            :Return: None
-
-            :TODO 
+        Args:
+            addr (String): Address of node that new node is being added to with the format '#:#:#:...'.
+ 
         """
 
 
@@ -274,12 +270,9 @@ class ThresTree:
     def removeChild(self, addr):
         """Removes a child node of a node at a given address. Removes a random child node.
 
-            :Parameter addr: Address of node that node is being removed from.
-            :Type addr: String, of the format '#:#:#:...'
-
-            :Return: None
-
-            :TODO 
+        Args: 
+            addr (String): Address of node that node is being removed from with the format '#:#:#:...'.
+ 
         """
 
         if hasattr(self, 'finalized'):
@@ -292,15 +285,12 @@ class ThresTree:
         del(node.children[childAddr])
 
     def propagate(self, data=None):
-        """Propogates the tree with data. If none is given a DSA key-pair will be 
-            generated by the Voter class.
+        """Propogates the tree with data. If none is given a DSA key-pair will be generated by the Voter class.
 
-            :Parameter data: The data to be propogated down the tree. (Usually None)
-            :Type addr: long or int
+        Args: 
+            data (int): The data to be propogated down the tree. (Usually None)
+ 
 
-            :Return: None
-
-            :TODO 
         """
         if hasattr(self, 'finalized'):
             print('Tree already propagated.')

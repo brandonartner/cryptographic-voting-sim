@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Voter &mdash; SecretSharingProject 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SecretSharingProject
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SecretSharingProject</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>Voter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for Voter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">fractions</span> <span class="k">import</span> <span class="n">Fraction</span>
+<span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="k">import</span> <span class="n">DSA</span>
+<span class="kn">from</span> <span class="nn">Crypto.Util</span> <span class="k">import</span> <span class="n">number</span>
+<span class="kn">from</span> <span class="nn">Crypto.Random</span> <span class="k">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">sympy.abc</span> <span class="k">import</span> <span class="n">x</span>
+<span class="kn">from</span> <span class="nn">Toolkit</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="kn">import</span> <span class="nn">sympy</span>
+
+<div class="viewcode-block" id="Voter"><a class="viewcode-back" href="../index.html#Voter.Voter">[docs]</a><span class="k">class</span> <span class="nc">Voter</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;	Voter implements a (n,k)-threshold scheme which is capable of submiting </span>
+<span class="sd">		a signature.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        prime_size (int): Size of the prime number. (Default: 1024)</span>
+<span class="sd">        p (int): The prime number.</span>
+<span class="sd">        n (int): The number of keys to make with Shamir&#39;s Scheme.</span>
+<span class="sd">        k (int): The number of keys required to construct the data.</span>
+<span class="sd">        values (list): The values for the active Asynchronous Neville&#39;s Method.</span>
+<span class="sd">        pubKey (PubKey): Public Key object for DSA.</span>
+<span class="sd">        node (TreeNoe): The node this Voter belongs to.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">    	Digital Signature Specifications (DSS) specifies that the prime length should be 1024/2048 (Can&#39;t Remember).</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">prime_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Initializes a Voter object.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">	        node (TreeNode): A reference back to the node this voter belongs to.</span>
+
+<span class="sd">	        n (int): The number of key to generate for this voter.</span>
+
+<span class="sd">	        k (int): The number of vote required to pass a vote.</span>
+
+<span class="sd">	        prime_size (int): The number of bits for the prime number.</span>
+<span class="sd">	    						default: 1024</span>
+<span class="sd">	    						Must be a multiple of 128 between 512 and 1024.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">prime_size</span> <span class="o">=</span> <span class="n">prime_size</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">number</span><span class="o">.</span><span class="n">getStrongPrime</span><span class="p">(</span><span class="n">prime_size</span><span class="p">,</span><span class="n">false_positive_prob</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[[],</span> <span class="p">[]]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span>
+
+<div class="viewcode-block" id="Voter.generate_scheme"><a class="viewcode-back" href="../index.html#Voter.Voter.generate_scheme">[docs]</a>	<span class="k">def</span> <span class="nf">generate_scheme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Generates the private-public key pair, the polynomial, and the keys for this voter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	        data (int): The data to be used as the secret data. </span>
+<span class="sd">	    						(Note: None means the voter is for root node.)</span>
+<span class="sd">	        </span>
+<span class="sd">	    Returns: </span>
+<span class="sd">	    	list of int tuples: list of key pairs generated by Shamir&#39;s Scheme.</span>
+
+<span class="sd">        Todo: </span>
+<span class="sd">        	Implement non-root DSA key pairs. This is to allow for signing of sub-root</span>
+<span class="sd">        	document sets. Problem consists of being given a private key and having to </span>
+<span class="sd">        	generate a public key.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating new DSA pair.&#39;</span><span class="p">)</span>
+			<span class="c1"># Generate the DSA public-private key pair for signing with</span>
+			<span class="n">key</span> <span class="o">=</span> <span class="n">DSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prime_size</span><span class="p">)</span>
+			<span class="c1"># Set the prime equal to the modulus from the DSA key set</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">publickey</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="o">.</span><span class="n">p</span>
+			<span class="c1"># Set the public key to the public key from the DSA key set</span>
+			<span class="n">data</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">x</span>
+		<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">		else:</span>
+<span class="sd">			print(&#39;Creating new DSA pair.&#39;)</span>
+<span class="sd">			# Generate the DSA public-private key pair for signing with</span>
+<span class="sd">			key = DSA.importKey(convert_to_format(data))</span>
+<span class="sd">			# Set the prime equal to the modulus from the DSA key set</span>
+<span class="sd">			self.p = key.p</span>
+<span class="sd">			# Set the public key to the public key from the DSA key set</span>
+<span class="sd">			self.pubKey = key.y</span>
+<span class="sd">			data = key.x</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+
+		<span class="c1"># Generate a polynomial</span>
+		<span class="n">poly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_polynomial</span><span class="p">(</span><span class="n">data</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+		<span class="c1"># Reutrn a set of keys generated from the polynomial</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_keys</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Voter.random_distinct"><a class="viewcode-back" href="../index.html#Voter.Voter.random_distinct">[docs]</a>	<span class="k">def</span> <span class="nf">random_distinct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Generates lists of distinct random numbers,</span>
+<span class="sd">		</span>
+<span class="sd">        Args:</span>
+<span class="sd">	        lower_bound (int): Low bound for searching.</span>
+<span class="sd">	        upper_bound (int): High bound for searching.</span>
+<span class="sd">	        size (int): Length of list of numbers.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        	 int: List of random numbers within given bounds.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="n">v</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
+			<span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+		    
+			<span class="k">if</span> <span class="n">rand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+				<span class="n">v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
+		        
+		<span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="Voter.generate_polynomial"><a class="viewcode-back" href="../index.html#Voter.Voter.generate_polynomial">[docs]</a>	<span class="k">def</span> <span class="nf">generate_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Makes a random polynomial with data as the coeficient term.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        	data (int): The data as a numeric value to be split.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">        	lambda function: polynomial as a lambda function.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="c1"># Shamir&#39;s algorithms requires each coefficient to be distinct</span>
+		<span class="c1">#coefficients = random.sample((x for x in range(self.p)), self.k-1) </span>
+		<span class="n">coefficients</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">random_distinct</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+		<span class="c1"># start building our polynomial</span>
+		<span class="n">polynomial</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+		<span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span>
+
+		<span class="k">while</span> <span class="n">power</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="c1"># each a_i*x^i for i from k-1 to 1</span>
+			<span class="n">polynomial</span> <span class="o">=</span> <span class="n">polynomial</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">*x**</span><span class="si">{}</span><span class="s1">+&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coefficients</span><span class="p">[</span><span class="o">-</span><span class="n">power</span><span class="p">],</span> <span class="n">power</span><span class="p">)</span>
+			<span class="n">power</span> <span class="o">-=</span> <span class="mi">1</span>
+
+		<span class="c1"># set a_0 to data</span>
+		<span class="n">polynomial</span> <span class="o">=</span> <span class="n">polynomial</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+		<span class="c1"># convert polynomial string to lambda function</span>
+		<span class="n">f</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">polynomial</span><span class="p">))</span>
+
+		<span class="k">return</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="Voter.generate_keys"><a class="viewcode-back" href="../index.html#Voter.Voter.generate_keys">[docs]</a>	<span class="k">def</span> <span class="nf">generate_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Creates the keys for distributing.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	        poly (lambda function): Polynomial function to create the keys.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">        	list of int tuples: list of key pairs generated by Shamir&#39;s Scheme.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="c1"># create distinct x values because f(a)=f(b) iff a=b </span>
+		<span class="c1"># implies less than n keys will be made</span>
+		<span class="n">X</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+		<span class="c1"># get corresponding y values</span>
+		<span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+
+		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Voter.add_key_to_signature"><a class="viewcode-back" href="../index.html#Voter.Voter.add_key_to_signature">[docs]</a>	<span class="k">def</span> <span class="nf">add_key_to_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Function implements the Asynchronous Neville&#39;s Method and adds the given key to the in progress vote. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	        key (int, int): The key being added to the LIP.</span>
+
+<span class="sd">	        doc (String, String): The document being voted on.</span>
+
+<span class="sd">	    Returns: </span>
+<span class="sd">	    	(int,int): DSA Signature. if the vote is completed, i.e. k keys have been submitted.</span>
+<span class="sd">	        boolean: VoteIsSuccessful. True if vote was finished.</span>
+
+<span class="sd">        Todo:</span>
+<span class="sd">        	Ensure that the submitted key is actually valid. ie. It is from the set of keys originally generated</span>
+<span class="sd">        	for this voter.</span>
+
+<span class="sd">    	Note:</span>
+<span class="sd">    		This function returns both a signature if there is one, and a boolean of whether</span>
+<span class="sd">    		or not a vote has finished.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="c1"># splitting the key across first two lists</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+		
+		<span class="c1"># generate the as far forward as possible in the Neville list</span>
+		<span class="c1"># ie. if 3 keys have been submitted, 3 entries in the list can be made</span>
+		<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">lst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+			<span class="c1"># for every sublist that has 2 elements, generate the corresponding  LIP</span>
+		    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+		        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">firstOrderLag</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+		        
+		        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+		            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">find_divisible_congruency</span><span class="p">(</span><span class="n">val</span><span class="p">)])</span>
+		        <span class="k">else</span><span class="p">:</span>
+		            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_divisible_congruency</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+		            
+				<span class="c1"># remove now unnecessary value from current sublist</span>
+		        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+		<span class="c1"># if there are k elements, than we are done, delete all elements and return the last value</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">:</span>
+			<span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">return</span> <span class="n">signature</span><span class="p">,</span> <span class="kc">True</span>
+
+		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Voter.firstOrderLag"><a class="viewcode-back" href="../index.html#Voter.Voter.firstOrderLag">[docs]</a>	<span class="k">def</span> <span class="nf">firstOrderLag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Calculates the (idx)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">	        idx (int): The order of the next LIP.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        	Fraction: A fraction containing the value of the (idx)th LIP, evaluated at 0.</span>
+
+<span class="sd">        Todo: </span>
+<span class="sd">        	I think the name of this function is missleading, should&#39;t it be nOrdLag.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+		<span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+		<span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+		<span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+
+		<span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+		<span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+		<span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="n">y1</span><span class="o">-</span><span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">*</span><span class="n">y2</span>
+		<span class="n">den</span> <span class="o">=</span> <span class="n">x1</span><span class="o">-</span><span class="n">x2</span>
+		<span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">den</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Voter.find_divisible_congruency"><a class="viewcode-back" href="../index.html#Voter.Voter.find_divisible_congruency">[docs]</a>	<span class="k">def</span> <span class="nf">find_divisible_congruency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Calculates a congruent integer to the numerator that is divisible by the denominator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        	fraction (Fraction): fraction, the fraction in question.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">        	int: The z such that z = (num + i*prime)/den and z is an integer (without trunction).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="c1"># Fracction class is used here because float division can&#39;t handle crypto-secure sized numbers,</span>
+		<span class="c1">#  but Fraction uses integers, which can handle effectively infinite numbers</span>
+		<span class="n">num</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">fraction</span><span class="o">.</span><span class="n">numerator</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+		<span class="n">den</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">fraction</span><span class="o">.</span><span class="n">denominator</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+		<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
+
+		<span class="k">while</span> <span class="n">z</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+			<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
+
+		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Voter.sign"><a class="viewcode-back" href="../index.html#Voter.Voter.sign">[docs]</a>	<span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">private_key</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Function creates the digital signature for a given document with this voter&#39;s private key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        	doc (String, String): The document that is being signed.</span>
+
+<span class="sd">            private_key (int): The private key for the DSA pair. (Comes from add_key_to_signature)</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">        	(int, int): A signature if this node has a public key, else None.</span>
+
+<span class="sd">        Todo: </span>
+<span class="sd">        	Right now the doc param is a string 2-tuple, this might be better as just a String since all </span>
+<span class="sd">    		that is needed is the document text and it would be more intuitive for future users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
+			<span class="c1"># If voter is a subvoter, also send key to parent.</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">vote</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">data_to_key</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="p">:</span>
+			<span class="c1"># Sign the document. </span>
+			<span class="n">key</span> <span class="o">=</span> <span class="n">DSA</span><span class="o">.</span><span class="n">construct</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">private_key</span><span class="p">))</span>
+
+			<span class="n">m</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+			<span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+			<span class="n">h</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+			<span class="n">k</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">StrongRandom</span><span class="p">()</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">key</span><span class="o">.</span><span class="n">q</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+			<span class="n">signature</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+
+			<span class="k">return</span> <span class="n">signature</span>
+
+		<span class="k">return</span> <span class="kc">None</span></div>
+
+		
+<div class="viewcode-block" id="Voter.verify"><a class="viewcode-back" href="../index.html#Voter.Voter.verify">[docs]</a>	<span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">doc</span><span class="p">,</span> <span class="n">signature</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Function verifies a digital signature. for a given document with this voter&#39;s public key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        	doc (String): The document that is being signed.</span>
+
+<span class="sd">        	signature (int, int): DSA signature being verified.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">        	boolean: True if the voter has a public key and the signature is correct, False otherwise.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="p">:</span>
+			<span class="n">m</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+			<span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+			<span class="n">h</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubKey</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">signature</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ty Danet, Brandon Artner.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
