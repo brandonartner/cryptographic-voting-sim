@@ -35,7 +35,14 @@ class VoteSim():
 
 	def help(self, command=None):
 		"""Prints help information.
+
+        Args: 
+        	command (String): The command to print help information for.
+
+		Todo: 
+			The help documentation needs to finished.
 		"""
+
 		# If a command is given and it is in the commands dictionary, print the help info
 		if command is not None and command in commands:
 			print('------------------------------------------')
@@ -49,6 +56,16 @@ class VoteSim():
 				print('------------------------------------------\n')
 
 	def parse(self, user_input):
+		"""Parses user inputted commands.
+
+        Args: 
+        	user_input (String): The User input to be parsed.
+		
+		Todo: 
+			Input verification needs to be improved.
+		
+		"""
+
 		command = user_input.split()
 
 		if re.match('vote', command[0]):
@@ -86,7 +103,7 @@ class VoteSim():
 
 		
 	def repl(self):
-		"""REPL function to simulate a vote. Loops until quit is called.
+		"""REPL function to run a voting session. Loops until quit is called.
 		"""
 		print((	'\n####################################################################'
 				'\n### Now in an Active Vote Session. Enter h for list of commands. ###'

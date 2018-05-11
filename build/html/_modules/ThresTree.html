@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ThresTree &mdash; SecretSharingProject 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SecretSharingProject
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SecretSharingProject</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>ThresTree</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ThresTree</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">Toolkit</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Voter</span> <span class="k">import</span> <span class="n">Voter</span>
+
+<div class="viewcode-block" id="TreeNode"><a class="viewcode-back" href="../index.html#ThresTree.TreeNode">[docs]</a><span class="k">class</span> <span class="nc">TreeNode</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Nodes used by the Tree object</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        addr (String): Address of this node.</span>
+<span class="sd">        parent (TreeNode): Parent node.</span>
+<span class="sd">        documents (list): Documents list.</span>
+<span class="sd">        voter (Voter): Voter object.</span>
+<span class="sd">        finalized (boolean): Keeps track of whether this node has been finalized.</span>
+<span class="sd">        current_vote (String, String): The documents that is currently being voted on.</span>
+<span class="sd">        already_voted (list): List of node address that have already voted.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        already_voted variable is only used if this node has child nodes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Split a node from being a leaf to having children.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            addr (String): The address of the node with the format &#39;#:#:#:...&#39;</span>
+
+<span class="sd">            parent (TreeNode): The parent node.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">addr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voter</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finalized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_vote</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">already_voted</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="TreeNode.split"><a class="viewcode-back" href="../index.html#ThresTree.TreeNode.split">[docs]</a>    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Split a node from being a leaf to having children.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n (int): The number of key to generate for this voter.</span>
+
+<span class="sd">            k (int): The number of vote required to pass a vote.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;n&lt;k: invalid arguements. n must be greater than or equal to k.&#39;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">voter</span><span class="p">:</span>
+            <span class="c1"># Maybe raise an exception instead, idk which type though?</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cannot split voter node.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">childAddr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">childAddr</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">childAddr</span><span class="p">]</span> <span class="o">=</span> <span class="n">child</span></div>
+
+
+<div class="viewcode-block" id="TreeNode.finalize"><a class="viewcode-back" href="../index.html#ThresTree.TreeNode.finalize">[docs]</a>    <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a voter object for each non-leaf node and sets key data for each leaf.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            data (int, int): key data from parent nodes</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            boolean: True if the signature is correct, False otherwise.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">finalized</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;children&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing voter for </span><span class="si">{}</span><span class="s1"> with data:</span><span class="se">\n</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="s1">).</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">base_convert</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">92</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Initializing voter for </span><span class="si">{}</span><span class="s1"> with data:</span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span><span class="n">data</span><span class="p">))</span>
+
+                <span class="c1"># should this check if data is a key pair</span>
+                <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">key_to_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+                    <span class="c1"># if data is given, the size of the prime needs to be increased to a bigger multiple of 128</span>
+                    <span class="c1">#       Note: 128 because the RSA keys need the prime size to be a multiple of 128.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">voter</span> <span class="o">=</span> <span class="n">Voter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">prime_size</span><span class="o">=</span><span class="n">next_multiple_of_128</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">voter</span> <span class="o">=</span> <span class="n">Voter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+
+                <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">voter</span><span class="o">.</span><span class="n">generate_scheme</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">finalized</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has gotten the data:</span><span class="se">\n</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="s1">).</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">base_convert</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">92</span><span class="p">)))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error: Node at </span><span class="si">{}</span><span class="s1"> is already finalized.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TreeNode.vote"><a class="viewcode-back" href="../index.html#ThresTree.TreeNode.vote">[docs]</a>    <span class="k">def</span> <span class="nf">vote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Votes on a given document</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            doc (String, String): The document being voted on. First element is the file name. Second is the document&#39;s text.</span>
+
+<span class="sd">            key (int, int): key data passed up from child nodes</span>
+
+<span class="sd">        Todo: </span>
+<span class="sd">            Turn current_vote into a queue of documents waiting to be voted on.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">already_voted</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has already voted in the current vote.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">):</span>
+            <span class="c1"># if the node has data, then it is a leaf and its key is added to the active vote.</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">documents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># If the document being voted on isn&#39;t in the documents list, add it</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Document </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1"> has been added to </span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1">s documents list.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">addr</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">documents</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">],(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+
+            <span class="k">elif</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">documents</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="c1"># If the document being voted on is different in the documents list, update it?</span>
+                <span class="c1"># Probably shouldn&#39;t be able to just change the document text like this.</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Document </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1"> has been updated and is now available for voting on.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">documents</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">],(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__send_vote</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">key</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__send_vote</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__send_vote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Private helper function, submit the vote and ensures that the document is the one being voted on.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            doc (String, String): The document being voted on. First element is the file name. Second is the document&#39;s text.</span>
+
+<span class="sd">            key (int, int): key data being sent for a vote.</span>
+
+<span class="sd">        Todo: </span>
+<span class="sd">            Turn current_vote into a queue of documents waiting to be voted on.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">current_vote</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">current_vote</span> <span class="o">==</span> <span class="n">doc</span><span class="p">:</span>
+            <span class="c1"># if there isn&#39;t a different document being voted on</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> voted to sign </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span><span class="n">doc</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">current_vote</span> <span class="o">=</span> <span class="n">doc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">already_voted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
+            <span class="n">signature</span><span class="p">,</span> <span class="n">vote_finished</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">voter</span><span class="o">.</span><span class="n">add_key_to_signature</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">signature</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">documents</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">signature</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1"> has been signed by node </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">addr</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">current_vote</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">already_voted</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">if</span> <span class="n">vote_finished</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">current_vote</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">already_voted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> tried to vote to sign </span><span class="si">{}</span><span class="s1">, but </span><span class="si">{}</span><span class="s1"> is being voted on.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span><span class="n">doc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">current_vote</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="TreeNode.show_documents"><a class="viewcode-back" href="../index.html#ThresTree.TreeNode.show_documents">[docs]</a>    <span class="k">def</span> <span class="nf">show_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verified_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Displays all of the documents for root.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            verified_only (boolean): Flag to only print verified/signed documents</span>
+
+<span class="sd">        Todo: </span>
+<span class="sd">            Implement this for all levels of ducument sets. e.g. print documents for address 0:2. </span>
+<span class="sd">            Requires implementing DSA signing on all levels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">-------------------------------------&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">docname</span><span class="p">,</span><span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">documents</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">verified</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">voter</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">verified</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">verified_only</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Title: </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> Text: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">docname</span><span class="p">,</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Document is Signed.</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">verified</span> <span class="k">else</span> <span class="s1">&#39;Document is Unsigned.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">verified</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Title: </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> Text: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">docname</span><span class="p">,</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Document is Signed.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-------------------------------------&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ThresTree"><a class="viewcode-back" href="../index.html#ThresTree.ThresTree">[docs]</a><span class="k">class</span> <span class="nc">ThresTree</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Tree designed to be used with Adi Shamir&#39;s (n, k)-thresholding scheme.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        root (TreeNode): The root node of the tree.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ThresTree.search"><a class="viewcode-back" href="../index.html#ThresTree.ThresTree.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Searches for a node at a given address.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            name (String): Address of node with the format &#39;#:#:#:...&#39;.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            TreeNode: A node with the corresponding address.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+
+        <span class="n">location</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="n">addr</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">return</span>
+
+        <span class="k">return</span> <span class="n">node</span></div>
+
+<div class="viewcode-block" id="ThresTree.addChild"><a class="viewcode-back" href="../index.html#ThresTree.ThresTree.addChild">[docs]</a>    <span class="k">def</span> <span class="nf">addChild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a child node to a node at a given address.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            addr (String): Address of node that new node is being added to with the format &#39;#:#:#:...&#39;.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;finalized&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cannot alter finalized tree.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">):</span>
+            <span class="n">numChildren</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">childAddr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">numChildren</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">childAddr</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+
+            <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">childAddr</span><span class="p">]</span> <span class="o">=</span> <span class="n">child</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cannot add to unsplit node.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThresTree.removeChild"><a class="viewcode-back" href="../index.html#ThresTree.ThresTree.removeChild">[docs]</a>    <span class="k">def</span> <span class="nf">removeChild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes a child node of a node at a given address. Removes a random child node.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            addr (String): Address of node that node is being removed from with the format &#39;#:#:#:...&#39;.</span>
+<span class="sd"> </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;finalized&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cannot alter finalized tree.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="n">childAddr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="k">del</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">childAddr</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ThresTree.propagate"><a class="viewcode-back" href="../index.html#ThresTree.ThresTree.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Propogates the tree with data. If none is given a DSA key-pair will be generated by the Voter class.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            data (int): The data to be propogated down the tree. (Usually None)</span>
+<span class="sd"> </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;finalized&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tree already propagated.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">finalized</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------------------------------------&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displayHelper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------------------------------------&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">displayHelper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">depth</span><span class="o">*</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">addr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1"> - Currently Voting On: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">depth</span><span class="o">*</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">current_vote</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="c1"># too bad python doesn&#39;t have tail call optimization</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">displayHelper</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">ThresTree</span><span class="p">()</span>
+
+    <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;0:1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">addChild</span><span class="p">(</span><span class="s1">&#39;0:1&#39;</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">addChild</span><span class="p">(</span><span class="s1">&#39;0:1&#39;</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+    <span class="n">tree</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;0:5&#39;</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ty Danet, Brandon Artner.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

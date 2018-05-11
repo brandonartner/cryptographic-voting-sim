@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Secret Sharing Capstone &mdash; SecretSharingProject 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> SecretSharingProject
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Secret Sharing Capstone</a><ul>
+<li><a class="reference internal" href="#threstree">ThresTree</a></li>
+<li><a class="reference internal" href="#voter">Voter</a></li>
+<li><a class="reference internal" href="#treemaker">TreeMaker</a></li>
+<li><a class="reference internal" href="#votesession">VoteSession</a></li>
+<li><a class="reference internal" href="#toolkit">Toolkit</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">SecretSharingProject</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Secret Sharing Capstone</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="secret-sharing-capstone">
+<h1>Secret Sharing Capstone<a class="headerlink" href="#secret-sharing-capstone" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+</ul>
+<span class="target" id="module-ThresTree"></span><div class="section" id="threstree">
+<h2>ThresTree<a class="headerlink" href="#threstree" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ThresTree.ThresTree">
+<em class="property">class </em><code class="descclassname">ThresTree.</code><code class="descname">ThresTree</code><a class="reference internal" href="_modules/ThresTree.html#ThresTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.ThresTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tree designed to be used with Adi Shamir’s (n, k)-thresholding scheme.</p>
+<dl class="attribute">
+<dt id="ThresTree.ThresTree.root">
+<code class="descname">root</code><a class="headerlink" href="#ThresTree.ThresTree.root" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>TreeNode</em> – The root node of the tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.ThresTree.addChild">
+<code class="descname">addChild</code><span class="sig-paren">(</span><em>addr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#ThresTree.addChild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.ThresTree.addChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a child node to a node at a given address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>addr</strong> (<em>String</em>) – Address of node that new node is being added to with the format ‘#:#:#:…’.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.ThresTree.propagate">
+<code class="descname">propagate</code><span class="sig-paren">(</span><em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#ThresTree.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.ThresTree.propagate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propogates the tree with data. If none is given a DSA key-pair will be generated by the Voter class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>int</em>) – The data to be propogated down the tree. (Usually None)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.ThresTree.removeChild">
+<code class="descname">removeChild</code><span class="sig-paren">(</span><em>addr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#ThresTree.removeChild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.ThresTree.removeChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a child node of a node at a given address. Removes a random child node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>addr</strong> (<em>String</em>) – Address of node that node is being removed from with the format ‘#:#:#:…’.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.ThresTree.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#ThresTree.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.ThresTree.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches for a node at a given address.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>String</em>) – Address of node with the format ‘#:#:#:…’.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A node with the corresponding address.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ThresTree.TreeNode" title="ThresTree.TreeNode">TreeNode</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ThresTree.TreeNode">
+<em class="property">class </em><code class="descclassname">ThresTree.</code><code class="descname">TreeNode</code><span class="sig-paren">(</span><em>addr</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#TreeNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.TreeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nodes used by the Tree object</p>
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.addr">
+<code class="descname">addr</code><a class="headerlink" href="#ThresTree.TreeNode.addr" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>String</em> – Address of this node.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.parent">
+<code class="descname">parent</code><a class="headerlink" href="#ThresTree.TreeNode.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>TreeNode</em> – Parent node.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.documents">
+<code class="descname">documents</code><a class="headerlink" href="#ThresTree.TreeNode.documents" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> – Documents list.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.voter">
+<code class="descname">voter</code><a class="headerlink" href="#ThresTree.TreeNode.voter" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Voter</em> – Voter object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.finalized">
+<code class="descname">finalized</code><a class="headerlink" href="#ThresTree.TreeNode.finalized" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>boolean</em> – Keeps track of whether this node has been finalized.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.current_vote">
+<code class="descname">current_vote</code><a class="headerlink" href="#ThresTree.TreeNode.current_vote" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>String, String</em> – The documents that is currently being voted on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ThresTree.TreeNode.already_voted">
+<code class="descname">already_voted</code><a class="headerlink" href="#ThresTree.TreeNode.already_voted" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> – List of node address that have already voted.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">already_voted variable is only used if this node has child nodes.</p>
+</div>
+<dl class="method">
+<dt id="ThresTree.TreeNode.finalize">
+<code class="descname">finalize</code><span class="sig-paren">(</span><em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#TreeNode.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.TreeNode.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a voter object for each non-leaf node and sets key data for each leaf.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>int</em><em>, </em><em>int</em>) – key data from parent nodes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the signature is correct, False otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.TreeNode.show_documents">
+<code class="descname">show_documents</code><span class="sig-paren">(</span><em>verified_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#TreeNode.show_documents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.TreeNode.show_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays all of the documents for root.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>verified_only</strong> (<em>boolean</em>) – Flag to only print verified/signed documents</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Implement this for all levels of ducument sets. e.g. print documents for address 0:2.
+Requires implementing DSA signing on all levels.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.TreeNode.split">
+<code class="descname">split</code><span class="sig-paren">(</span><em>n</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#TreeNode.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.TreeNode.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a node from being a leaf to having children.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n</strong> (<em>int</em>) – The number of key to generate for this voter.</li>
+<li><strong>k</strong> (<em>int</em>) – The number of vote required to pass a vote.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ThresTree.TreeNode.vote">
+<code class="descname">vote</code><span class="sig-paren">(</span><em>doc</em>, <em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ThresTree.html#TreeNode.vote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ThresTree.TreeNode.vote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Votes on a given document</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>doc</strong> (<em>String</em><em>, </em><em>String</em>) – The document being voted on. First element is the file name. Second is the document’s text.</li>
+<li><strong>key</strong> (<em>int</em><em>, </em><em>int</em>) – key data passed up from child nodes</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">Turn current_vote into a queue of documents waiting to be voted on.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-Voter"></span><div class="section" id="voter">
+<h2>Voter<a class="headerlink" href="#voter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Voter.Voter">
+<em class="property">class </em><code class="descclassname">Voter.</code><code class="descname">Voter</code><span class="sig-paren">(</span><em>node</em>, <em>n</em>, <em>k</em>, <em>prime_size=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Voter implements a (n,k)-threshold scheme which is capable of submiting</dt>
+<dd>a signature.</dd>
+</dl>
+<dl class="attribute">
+<dt id="Voter.Voter.prime_size">
+<code class="descname">prime_size</code><a class="headerlink" href="#Voter.Voter.prime_size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – Size of the prime number. (Default: 1024)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Voter.Voter.p">
+<code class="descname">p</code><a class="headerlink" href="#Voter.Voter.p" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – The prime number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Voter.Voter.n">
+<code class="descname">n</code><a class="headerlink" href="#Voter.Voter.n" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – The number of keys to make with Shamir’s Scheme.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Voter.Voter.k">
+<code class="descname">k</code><a class="headerlink" href="#Voter.Voter.k" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – The number of keys required to construct the data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Voter.Voter.values">
+<code class="descname">values</code><a class="headerlink" href="#Voter.Voter.values" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> – The values for the active Asynchronous Neville’s Method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Voter.Voter.pubKey">
+<code class="descname">pubKey</code><a class="headerlink" href="#Voter.Voter.pubKey" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>PubKey</em> – Public Key object for DSA.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Voter.Voter.node">
+<code class="descname">node</code><a class="headerlink" href="#Voter.Voter.node" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>TreeNoe</em> – The node this Voter belongs to.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Digital Signature Specifications (DSS) specifies that the prime length should be 1024/2048 (Can’t Remember).</p>
+</div>
+<dl class="method">
+<dt id="Voter.Voter.add_key_to_signature">
+<code class="descname">add_key_to_signature</code><span class="sig-paren">(</span><em>key</em>, <em>doc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.add_key_to_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.add_key_to_signature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function implements the Asynchronous Neville’s Method and adds the given key to the in progress vote.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>int</em><em>, </em><em>int</em>) – The key being added to the LIP.</li>
+<li><strong>doc</strong> – The document being voted on.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Ensure that the submitted key is actually valid. ie. It is from the set of keys originally generated
+for this voter.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function returns both a signature if there is one, and a boolean of whether
+or not a vote has finished.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.find_divisible_congruency">
+<code class="descname">find_divisible_congruency</code><span class="sig-paren">(</span><em>fraction</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.find_divisible_congruency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.find_divisible_congruency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a congruent integer to the numerator that is divisible by the denominator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fraction</strong> (<em>Fraction</em>) – fraction, the fraction in question.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The z such that z = (num + i*prime)/den and z is an integer (without trunction).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.firstOrderLag">
+<code class="descname">firstOrderLag</code><span class="sig-paren">(</span><em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.firstOrderLag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.firstOrderLag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the (idx)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idx</strong> (<em>int</em>) – The order of the next LIP.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A fraction containing the value of the (idx)th LIP, evaluated at 0.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Fraction</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">Todo</p>
+<p class="last">I think the name of this function is missleading, should’t it be nOrdLag.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.generate_keys">
+<code class="descname">generate_keys</code><span class="sig-paren">(</span><em>poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.generate_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.generate_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the keys for distributing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>poly</strong> (<em>lambda function</em>) – Polynomial function to create the keys.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of key pairs generated by Shamir’s Scheme.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of int tuples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.generate_polynomial">
+<code class="descname">generate_polynomial</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.generate_polynomial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.generate_polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a random polynomial with data as the coeficient term.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>int</em>) – The data as a numeric value to be split.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">polynomial as a lambda function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">lambda function</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.generate_scheme">
+<code class="descname">generate_scheme</code><span class="sig-paren">(</span><em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.generate_scheme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.generate_scheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the private-public key pair, the polynomial, and the keys for this voter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> – The data to be used as the secret data.
+(Note: None means the voter is for root node.)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">Todo</p>
+<p class="last">Implement non-root DSA key pairs. This is to allow for signing of sub-root
+document sets. Problem consists of being given a private key and having to
+generate a public key.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.random_distinct">
+<code class="descname">random_distinct</code><span class="sig-paren">(</span><em>lower_bound</em>, <em>upper_bound</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.random_distinct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.random_distinct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates lists of distinct random numbers,</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lower_bound</strong> (<em>int</em>) – Low bound for searching.</li>
+<li><strong>upper_bound</strong> (<em>int</em>) – High bound for searching.</li>
+<li><strong>size</strong> (<em>int</em>) – Length of list of numbers.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of random numbers within given bounds.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.sign">
+<code class="descname">sign</code><span class="sig-paren">(</span><em>doc</em>, <em>private_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.sign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function creates the digital signature for a given document with this voter’s private key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>doc</strong> – The document that is being signed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A signature if this node has a public key, else None.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(int, int)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-5">
+<p class="first admonition-title">Todo</p>
+<p class="last">Right now the doc param is a string 2-tuple, this might be better as just a String since all
+that is needed is the document text and it would be more intuitive for future users.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Voter.Voter.verify">
+<code class="descname">verify</code><span class="sig-paren">(</span><em>doc</em>, <em>signature</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Voter.html#Voter.verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Voter.Voter.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function verifies a digital signature. for a given document with this voter’s public key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>doc</strong> (<em>String</em>) – The document that is being signed.</li>
+<li><strong>signature</strong> (<em>int</em><em>, </em><em>int</em>) – DSA signature being verified.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the voter has a public key and the signature is correct, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-TreeMaker"></span><div class="section" id="treemaker">
+<h2>TreeMaker<a class="headerlink" href="#treemaker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TreeMaker.TreeMaker">
+<em class="property">class </em><code class="descclassname">TreeMaker.</code><code class="descname">TreeMaker</code><a class="reference internal" href="_modules/TreeMaker.html#TreeMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TreeMaker.TreeMaker" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for TreeMaker</p>
+<dl class="method">
+<dt id="TreeMaker.TreeMaker.help">
+<code class="descname">help</code><span class="sig-paren">(</span><em>command=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TreeMaker.html#TreeMaker.help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TreeMaker.TreeMaker.help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints help information.</p>
+<p>Args:
+command (String): The command to print help information for.</p>
+<div class="admonition-todo admonition" id="index-6">
+<p class="first admonition-title">Todo</p>
+<p class="last">The help documentation needs to finished.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="TreeMaker.TreeMaker.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/TreeMaker.html#TreeMaker.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TreeMaker.TreeMaker.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses user inputted commands.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_input</strong> (<em>String</em>) – The User input to be parsed.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="TreeMaker.TreeMaker.repl">
+<code class="descname">repl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/TreeMaker.html#TreeMaker.repl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#TreeMaker.TreeMaker.repl" title="Permalink to this definition">¶</a></dt>
+<dd><p>REPL function for tree maker. Loops until quit is called.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-VoteSession"></span><div class="section" id="votesession">
+<h2>VoteSession<a class="headerlink" href="#votesession" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="VoteSession.VoteSim">
+<em class="property">class </em><code class="descclassname">VoteSession.</code><code class="descname">VoteSim</code><span class="sig-paren">(</span><em>tree</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoteSession.html#VoteSim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#VoteSession.VoteSim" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for VoteSim</p>
+<dl class="method">
+<dt id="VoteSession.VoteSim.help">
+<code class="descname">help</code><span class="sig-paren">(</span><em>command=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoteSession.html#VoteSim.help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#VoteSession.VoteSim.help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints help information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>command</strong> (<em>String</em>) – The command to print help information for.</li>
+<li><strong>Todo</strong> – The help documentation needs to finished.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="VoteSession.VoteSim.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>user_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoteSession.html#VoteSim.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#VoteSession.VoteSim.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses user inputted commands.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>user_input</strong> (<em>String</em>) – The User input to be parsed.</li>
+<li><strong>Todo</strong> – Input verification needs to be improved.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="VoteSession.VoteSim.repl">
+<code class="descname">repl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoteSession.html#VoteSim.repl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#VoteSession.VoteSim.repl" title="Permalink to this definition">¶</a></dt>
+<dd><p>REPL function to run a voting session. Loops until quit is called.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-Toolkit"></span><div class="section" id="toolkit">
+<h2>Toolkit<a class="headerlink" href="#toolkit" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Toolkit.Polynomial">
+<em class="property">class </em><code class="descclassname">Toolkit.</code><code class="descname">Polynomial</code><span class="sig-paren">(</span><em>coefficients</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#Polynomial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.Polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to evaluate simulated polynomials</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.convvert_to_PEM">
+<code class="descclassname">Toolkit.</code><code class="descname">convvert_to_PEM</code><span class="sig-paren">(</span><em>private_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#convvert_to_PEM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.convvert_to_PEM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a private key integer to PEM format</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.decrypt">
+<code class="descclassname">Toolkit.</code><code class="descname">decrypt</code><span class="sig-paren">(</span><em>keys</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses Lagrange interpolation to decrypt data</p>
+<p>keys: List of keys to use in the decryption
+p: Prime number used to create finite field</p>
+<p>Returns: Decrypted data</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.generate_keys">
+<code class="descclassname">Toolkit.</code><code class="descname">generate_keys</code><span class="sig-paren">(</span><em>n</em>, <em>poly</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#generate_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.generate_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the keys</p>
+<p>n: Number of keys to be created
+poly: Polynomial function to create the keys
+p: Prime number for modular arithmetic</p>
+<p>Returns: n 2-tuples of keys</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.generate_polynomial">
+<code class="descclassname">Toolkit.</code><code class="descname">generate_polynomial</code><span class="sig-paren">(</span><em>data</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#generate_polynomial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.generate_polynomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a random polynomial</p>
+<p>data: The data as a numeric value to be split
+degree: The degree of the polynomial, and the minimum number of keys needed to decrypt</p>
+<p>Returns: polynomial as a function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.next_multiple_of_128">
+<code class="descclassname">Toolkit.</code><code class="descname">next_multiple_of_128</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#next_multiple_of_128"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.next_multiple_of_128" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the smallest number of bits bigger than the length of data and a multiple of 128.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.prime_generator">
+<code class="descclassname">Toolkit.</code><code class="descname">prime_generator</code><span class="sig-paren">(</span><em>lo</em>, <em>hi</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#prime_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.prime_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a random prime number</p>
+<p>lo: Low bound for searching
+hi: High bound for searching</p>
+<p>Returns: Random prime within bounds</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Toolkit.random_distinct">
+<code class="descclassname">Toolkit.</code><code class="descname">random_distinct</code><span class="sig-paren">(</span><em>lo</em>, <em>hi</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Toolkit.html#random_distinct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Toolkit.random_distinct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get lists of distinct random numbers,</p>
+<p>lo: Low bound for searching
+hi: High bound for searching</p>
+<p>Returns: Random numbers within bounds</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ty Danet, Brandon Artner.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

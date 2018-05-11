@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>TreeMaker &mdash; SecretSharingProject 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SecretSharingProject
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SecretSharingProject</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>TreeMaker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for TreeMaker</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">ThresTree</span> <span class="k">import</span> <span class="n">ThresTree</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit</span> <span class="k">import</span> <span class="n">prompt</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit.history</span> <span class="k">import</span> <span class="n">FileHistory</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit.auto_suggest</span> <span class="k">import</span> <span class="n">AutoSuggestFromHistory</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit.contrib.completers</span> <span class="k">import</span> <span class="n">WordCompleter</span>
+<span class="kn">from</span> <span class="nn">fuzzyfinder</span> <span class="k">import</span> <span class="n">fuzzyfinder</span>
+<span class="c1">#from pygments.lexers.python import Python3Lexer</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;add&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Adds a child node to the specified node in the tree.&#39;</span><span class="p">,</span>
+					<span class="p">(</span><span class="s1">&#39;add #:#:#:...</span><span class="se">\n</span><span class="s1">&#39;</span>
+								<span class="s1">&#39;</span><span class="se">\t</span><span class="s1">#:#:#:..., the address of the node the new node is being added to.&#39;</span>
+								<span class="s1">&#39;This can only be called for nodes that have already been split.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)],</span>
+
+			<span class="s1">&#39;split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Adds n child nodes to the specified node in the treeanization tree.&#39;</span><span class="p">,</span>
+						<span class="p">(</span><span class="s1">&#39;split n k #:#:#:...</span><span class="se">\n</span><span class="s1">&#39;</span>
+								<span class="s1">&#39;</span><span class="se">\t</span><span class="s1">n, is the number of children to make.&#39;</span>
+								<span class="s1">&#39;k, is the number of keys from the children nodes that are needed to sign something.&#39;</span>
+								<span class="s1">&#39;#:#:#:..., the address of the node that is being split.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)],</span>
+
+			<span class="s1">&#39;remove&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Removes the specified node from the organization tree.&#39;</span><span class="p">,</span>
+						<span class="p">(</span><span class="s1">&#39;remove #:#:#:...</span><span class="se">\n</span><span class="s1">&#39;</span>
+								<span class="s1">&#39;The last arguement is the address of the node that is being removed.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)],</span>
+
+			<span class="s1">&#39;clear&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No Description&#39;</span><span class="p">,</span><span class="s1">&#39;No Usage Info&#39;</span><span class="p">],</span>
+
+			<span class="s1">&#39;finalize&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No Description&#39;</span><span class="p">,</span><span class="s1">&#39;No Usage Info&#39;</span><span class="p">],</span>
+
+			<span class="s1">&#39;display&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No Description&#39;</span><span class="p">,</span><span class="s1">&#39;No Usage Info&#39;</span><span class="p">],</span>
+
+			<span class="s1">&#39;help&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No Description&#39;</span><span class="p">,</span><span class="s1">&#39;No Usage Info&#39;</span><span class="p">],</span>
+
+			<span class="s1">&#39;quit&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;No Description&#39;</span><span class="p">,</span><span class="s1">&#39;No Usage Info&#39;</span><span class="p">],</span>
+
+			<span class="p">}</span>
+
+<span class="n">CommandCompleter</span> <span class="o">=</span> <span class="n">WordCompleter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                                    <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TreeMaker"><a class="viewcode-back" href="../index.html#TreeMaker.TreeMaker">[docs]</a><span class="k">class</span> <span class="nc">TreeMaker</span><span class="p">():</span>
+	<span class="sd">&quot;&quot;&quot;docstring for TreeMaker&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">TreeMaker</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">ThresTree</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">display_toggle</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="TreeMaker.help"><a class="viewcode-back" href="../index.html#TreeMaker.TreeMaker.help">[docs]</a>	<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Prints help information.</span>
+<span class="sd">		</span>
+<span class="sd">		Args:</span>
+<span class="sd">	        command (String): The command to print help information for.</span>
+
+<span class="sd">		Todo: </span>
+<span class="sd">			The help documentation needs to finished.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="c1"># If a command is given and it is in the commands dictionary, print the help info</span>
+		<span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------------------&#39;</span><span class="p">)</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> - </span><span class="si">{1[0]}</span><span class="se">\n\t</span><span class="si">{1[1]}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="n">commands</span><span class="p">[</span><span class="n">command</span><span class="p">]))</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># If the command didn&#39;t exist or none was given, print the help info for all commands</span>
+			<span class="k">for</span> <span class="n">command_name</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
+				<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------------------&#39;</span><span class="p">)</span>
+				<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> - </span><span class="si">{1[0]}</span><span class="se">\n\t</span><span class="si">{1[1]}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command_name</span><span class="p">,</span><span class="n">commands</span><span class="p">[</span><span class="n">command_name</span><span class="p">]))</span>
+				<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TreeMaker.parse"><a class="viewcode-back" href="../index.html#TreeMaker.TreeMaker.parse">[docs]</a>	<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">command</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Parses user inputted commands.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">        	user_input (String): The User input to be parsed.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">command</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="n">args</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+		<span class="c1"># split n k #:#:#:...:#</span>
+		<span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;split&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;[0-9]+ [0-9]+ ([0-9]+:?)+&quot;</span><span class="p">,</span><span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;split &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
+					<span class="k">try</span><span class="p">:</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+					<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+						<span class="k">raise</span> <span class="n">e</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+		<span class="c1"># add #:#:...</span>
+		<span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;add&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;([0-9]+:?)+&quot;</span><span class="p">,</span><span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;add &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">addChild</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>				
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+		<span class="c1"># remove #:#:#:...:#</span>
+		<span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;remove&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;([0-9]+:?)+&quot;</span><span class="p">,</span><span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;remove &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">removeChild</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>				
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+		
+		<span class="c1"># clear</span>
+		<span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;clear&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">pass</span> <span class="c1">#self.tree.clear()</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+		
+		<span class="c1"># finalize data</span>
+		<span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;finalize&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;finalize [0-9]+&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">propagate</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+			<span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;finalize&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">propagate</span><span class="p">()</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+		<span class="c1"># display [--always,-a]</span>
+		<span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;display&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;(--always|-a)&quot;</span><span class="p">,</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">display_toggle</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_toggle</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+		
+		<span class="c1"># help [command]</span>
+		<span class="k">elif</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;help&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;[a-zA-Z]+&quot;</span><span class="p">,</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_toggle</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">display</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TreeMaker.repl"><a class="viewcode-back" href="../index.html#TreeMaker.TreeMaker.repl">[docs]</a>	<span class="k">def</span> <span class="nf">repl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;REPL function for tree maker. Loops until quit is called.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This is where you set up your organization layout. Enter h for list of commands.&#39;</span><span class="p">)</span>
+		<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="c1"># if the input stream is from keyboard use fancy repl, if not use basic</span>
+				<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+					<span class="n">user_input</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;&gt;&gt;&gt;&#39;</span><span class="p">,</span>
+										<span class="c1"># uses a history file</span>
+				                        <span class="n">history</span><span class="o">=</span><span class="n">FileHistory</span><span class="p">(</span><span class="s1">&#39;history.txt&#39;</span><span class="p">),</span>
+				                        <span class="c1"># uses auto suggest from history functionality</span>
+				                        <span class="n">auto_suggest</span><span class="o">=</span><span class="n">AutoSuggestFromHistory</span><span class="p">(),</span>
+				                        <span class="c1"># uses auto complete</span>
+				                        <span class="n">completer</span><span class="o">=</span><span class="n">CommandCompleter</span><span class="p">,</span>
+				                        <span class="c1"># uses python3 syntax highlighting</span>
+				                        <span class="c1"># this might be pointless</span>
+				                        <span class="c1">#lexer=Python3Lexer,</span>
+				                        <span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">user_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;&gt;&gt;&gt;&#39;</span><span class="p">)</span>
+
+				<span class="k">if</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s1">&#39;q&#39;</span> <span class="ow">or</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s1">&#39;quit&#39;</span><span class="p">:</span>
+					<span class="nb">print</span><span class="p">((</span>	<span class="s1">&#39;#################################&#39;</span>
+							<span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Final Organization Tree Structure:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+					<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span>
+
+				<span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+
+		    <span class="c1"># </span>
+			<span class="k">except</span> <span class="ne">NameError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+				<span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: command not found.</span><span class="se">\n</span><span class="s1">Try </span><span class="se">\&#39;</span><span class="s1">help</span><span class="se">\&#39;</span><span class="s1"> or </span><span class="se">\&#39;</span><span class="s1">h</span><span class="se">\&#39;</span><span class="s1">.&#39;</span><span class="p">)</span>
+			<span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+				<span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: invalid use.</span><span class="se">\n</span><span class="s1">Try </span><span class="se">\&#39;</span><span class="s1">help [command]</span><span class="se">\&#39;</span><span class="s1"> or </span><span class="se">\&#39;</span><span class="s1">h [command]</span><span class="se">\&#39;</span><span class="s1">.&#39;</span><span class="p">)</span>
+			<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+				<span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="n">treeMaker</span> <span class="o">=</span> <span class="n">TreeMaker</span><span class="p">()</span>
+	<span class="n">org</span> <span class="o">=</span> <span class="n">treeMaker</span><span class="o">.</span><span class="n">repl</span><span class="p">()</span>
+	
+	<span class="c1"># TODO: This should probably be done in a saving function in TreeMaker class.</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;wb+&#39;</span><span class="p">)</span>
+	<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Default Save. </span><span class="si">{}</span><span class="s1"> failed.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+		<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;organization.txt&#39;</span><span class="p">,</span><span class="s1">&#39;wb+&#39;</span><span class="p">)</span>
+
+	<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">org</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ty Danet, Brandon Artner.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

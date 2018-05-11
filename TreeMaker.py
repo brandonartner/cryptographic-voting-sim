@@ -49,7 +49,14 @@ class TreeMaker():
 
 	def help(self, command=None):
 		"""Prints help information.
+		
+		Args:
+	        command (String): The command to print help information for.
+
+		Todo: 
+			The help documentation needs to finished.
 		"""
+
 		# If a command is given and it is in the commands dictionary, print the help info
 		if command is not None and command in commands:
 			print('------------------------------------------')
@@ -64,6 +71,13 @@ class TreeMaker():
 
 
 	def parse(self,command):
+		"""Parses user inputted commands.
+
+        Args: 
+        	user_input (String): The User input to be parsed.
+
+		"""
+
 		command = command.lower()
 		args = command.split(' ')
 
