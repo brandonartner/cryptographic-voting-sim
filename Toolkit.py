@@ -31,18 +31,6 @@ class Polynomial:
 
         return s
 
-def prime_generator(lo, hi):
-    ''' Generates a random prime number
-    
-        lo: Low bound for searching
-        hi: High bound for searching
-        
-        Returns: Random prime within bounds
-    '''
-    
-    return 1004137 # totally random
-    #return number.getStrongPrime(prime_size,false_positive_prob=1e-10) # totally random (yes... yes it is)
-
 def random_distinct(lo, hi, size):
     ''' Used to get lists of distinct random numbers,
     
@@ -61,16 +49,6 @@ def random_distinct(lo, hi, size):
             v.append(rand)
             
     return v
-
-def sample(xs, size):
-    copy = [ x for x in xs ]
-    ys = []
-    
-    for i in range(size):
-        idx = np.random.randint(0, len(copy)-1)
-        ys.append(copy.pop(idx))
-        
-    return ys
 
 def generate_polynomial(data, k):
     ''' Makes a random polynomial
@@ -125,31 +103,6 @@ def find_congruence_with_divisibility(soln, p):
         z = (p*i+num)/den
 
     return int(z)
-
-def decrypt(keys, p):
-    ''' Uses Lagrange interpolation to decrypt data
-    
-        keys: List of keys to use in the decryption
-        p: Prime number used to create finite field
-        
-        Returns: Decrypted data
-    '''
-    
-    x, y = zip(*keys)
-    value = Fraction(0)
-    
-    for i in range(len(y)):   
-        product = Fraction(y[i])
-        
-        for j in range(len(x)):      
-            if i == j:
-                continue
-                
-            product *= Fraction(x[j], x[j]-x[i])
-
-        value += product
-        
-    return find_congruence_with_divisibility(value, p)
 
 def key_to_data(key, p):
     x, y = key
