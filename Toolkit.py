@@ -190,7 +190,6 @@ def data_to_key(data,p):
     prime_bit_len = len(bin(p)[2:])
 
     xbin = databin[1:prime_bit_len+1]
-    #xbin = databin[:len(databin)/2]
     ybin = databin[prime_bit_len+1:]
 
     x = int('0b'+xbin, 2)
@@ -208,8 +207,11 @@ def next_multiple_of_128(data):
     return math.ceil(bin_data_len/128)*128
 
 def convvert_to_PEM(private_key):
-    ''' Converts a private key integer to PEM format
-    '''
+    """ Converts a private key integer to PEM format
+
+    Todo:
+        Implement this... Maybe... This may be needed for making document sets on lower levels of the hierarchy.
+    """
     base64_key = 0
 
 def base_convert(n, base):

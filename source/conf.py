@@ -52,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'SecretSharingProject'
+project = 'S4 Voting System'
 copyright = '2018, Ty Danet, Brandon Artner'
 author = 'Ty Danet, Brandon Artner'
 
@@ -61,7 +61,7 @@ author = 'Ty Danet, Brandon Artner'
 # built documents.
 #
 # The short X.Y version.
-version = '0'
+version = '1'
 # The full version, including alpha/beta/rc tags.
 release = '0'
 

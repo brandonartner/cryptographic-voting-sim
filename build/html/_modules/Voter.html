@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Voter &mdash; SecretSharingProject 0 documentation</title>
+  <title>Voter &mdash; S4 Voting System 1.0 documentation</title>
   
 
   
@@ -47,7 +47,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> SecretSharingProject
+            <a href="../index.html" class="icon icon-home"> S4 Voting System
           
 
           
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                0
+                1
               </div>
             
           
@@ -95,7 +95,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">SecretSharingProject</a>
+          <a href="../index.html">S4 Voting System</a>
         
       </nav>
 
@@ -235,84 +235,9 @@
 <span class="sd">		&#39;&#39;&#39;</span>
 
 		<span class="c1"># Generate a polynomial</span>
-		<span class="n">poly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_polynomial</span><span class="p">(</span><span class="n">data</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+		<span class="n">poly</span> <span class="o">=</span> <span class="n">generate_polynomial</span><span class="p">(</span><span class="n">data</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
 		<span class="c1"># Reutrn a set of keys generated from the polynomial</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_keys</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Voter.random_distinct"><a class="viewcode-back" href="../index.html#Voter.Voter.random_distinct">[docs]</a>	<span class="k">def</span> <span class="nf">random_distinct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Generates lists of distinct random numbers,</span>
-<span class="sd">		</span>
-<span class="sd">        Args:</span>
-<span class="sd">	        lower_bound (int): Low bound for searching.</span>
-<span class="sd">	        upper_bound (int): High bound for searching.</span>
-<span class="sd">	        size (int): Length of list of numbers.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">        	 int: List of random numbers within given bounds.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-		<span class="n">v</span> <span class="o">=</span> <span class="p">[]</span>
-
-		<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
-			<span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
-		    
-			<span class="k">if</span> <span class="n">rand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-				<span class="n">v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
-		        
-		<span class="k">return</span> <span class="n">v</span></div>
-
-<div class="viewcode-block" id="Voter.generate_polynomial"><a class="viewcode-back" href="../index.html#Voter.Voter.generate_polynomial">[docs]</a>	<span class="k">def</span> <span class="nf">generate_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Makes a random polynomial with data as the coeficient term.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">        	data (int): The data as a numeric value to be split.</span>
-
-<span class="sd">        Returns: </span>
-<span class="sd">        	lambda function: polynomial as a lambda function.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-		<span class="c1"># Shamir&#39;s algorithms requires each coefficient to be distinct</span>
-		<span class="c1">#coefficients = random.sample((x for x in range(self.p)), self.k-1) </span>
-		<span class="n">coefficients</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">random_distinct</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-
-		<span class="c1"># start building our polynomial</span>
-		<span class="n">polynomial</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-		<span class="n">power</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span>
-
-		<span class="k">while</span> <span class="n">power</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-			<span class="c1"># each a_i*x^i for i from k-1 to 1</span>
-			<span class="n">polynomial</span> <span class="o">=</span> <span class="n">polynomial</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">*x**</span><span class="si">{}</span><span class="s1">+&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coefficients</span><span class="p">[</span><span class="o">-</span><span class="n">power</span><span class="p">],</span> <span class="n">power</span><span class="p">)</span>
-			<span class="n">power</span> <span class="o">-=</span> <span class="mi">1</span>
-
-		<span class="c1"># set a_0 to data</span>
-		<span class="n">polynomial</span> <span class="o">=</span> <span class="n">polynomial</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-		<span class="c1"># convert polynomial string to lambda function</span>
-		<span class="n">f</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">utilities</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">polynomial</span><span class="p">))</span>
-
-		<span class="k">return</span> <span class="n">f</span></div>
-
-<div class="viewcode-block" id="Voter.generate_keys"><a class="viewcode-back" href="../index.html#Voter.Voter.generate_keys">[docs]</a>	<span class="k">def</span> <span class="nf">generate_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Creates the keys for distributing.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">	        poly (lambda function): Polynomial function to create the keys.</span>
-
-<span class="sd">        Returns: </span>
-<span class="sd">        	list of int tuples: list of key pairs generated by Shamir&#39;s Scheme.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-		<span class="c1"># create distinct x values because f(a)=f(b) iff a=b </span>
-		<span class="c1"># implies less than n keys will be made</span>
-		<span class="n">X</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-		<span class="c1"># get corresponding y values</span>
-		<span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
-
-		<span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span></div>
+		<span class="k">return</span> <span class="n">generate_keys</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Voter.add_key_to_signature"><a class="viewcode-back" href="../index.html#Voter.Voter.add_key_to_signature">[docs]</a>	<span class="k">def</span> <span class="nf">add_key_to_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
@@ -347,12 +272,12 @@
 		<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">lst</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
 			<span class="c1"># for every sublist that has 2 elements, generate the corresponding  LIP</span>
 		    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-		        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">firstOrderLag</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+		        <span class="n">val</span> <span class="o">=</span> <span class="n">nthOrderLag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
 		        
 		        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span>
-		            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">find_divisible_congruency</span><span class="p">(</span><span class="n">val</span><span class="p">)])</span>
+		            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">find_divisible_congruency</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)])</span>
 		        <span class="k">else</span><span class="p">:</span>
-		            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_divisible_congruency</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+		            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">find_divisible_congruency</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">))</span>
 		            
 				<span class="c1"># remove now unnecessary value from current sublist</span>
 		        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -365,60 +290,6 @@
 			<span class="k">return</span> <span class="n">signature</span><span class="p">,</span> <span class="kc">True</span>
 
 		<span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span></div>
-
-
-<div class="viewcode-block" id="Voter.firstOrderLag"><a class="viewcode-back" href="../index.html#Voter.Voter.firstOrderLag">[docs]</a>	<span class="k">def</span> <span class="nf">firstOrderLag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Calculates the (idx)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.</span>
-<span class="sd">        </span>
-<span class="sd">        Args:</span>
-<span class="sd">	        idx (int): The order of the next LIP.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">        	Fraction: A fraction containing the value of the (idx)th LIP, evaluated at 0.</span>
-
-<span class="sd">        Todo: </span>
-<span class="sd">        	I think the name of this function is missleading, should&#39;t it be nOrdLag.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-		<span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-		<span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-		<span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-		<span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-
-		<span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-		<span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-		<span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="n">y1</span><span class="o">-</span><span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">*</span><span class="n">y2</span>
-		<span class="n">den</span> <span class="o">=</span> <span class="n">x1</span><span class="o">-</span><span class="n">x2</span>
-		<span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">den</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Voter.find_divisible_congruency"><a class="viewcode-back" href="../index.html#Voter.Voter.find_divisible_congruency">[docs]</a>	<span class="k">def</span> <span class="nf">find_divisible_congruency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Calculates a congruent integer to the numerator that is divisible by the denominator.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">        	fraction (Fraction): fraction, the fraction in question.</span>
-
-<span class="sd">        Returns: </span>
-<span class="sd">        	int: The z such that z = (num + i*prime)/den and z is an integer (without trunction).</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-		<span class="c1"># Fracction class is used here because float division can&#39;t handle crypto-secure sized numbers,</span>
-		<span class="c1">#  but Fraction uses integers, which can handle effectively infinite numbers</span>
-		<span class="n">num</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">fraction</span><span class="o">.</span><span class="n">numerator</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-		<span class="n">den</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">fraction</span><span class="o">.</span><span class="n">denominator</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-
-		<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
-
-		<span class="k">while</span> <span class="n">z</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
-			<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-			<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
-
-		<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Voter.sign"><a class="viewcode-back" href="../index.html#Voter.Voter.sign">[docs]</a>	<span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">private_key</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Function creates the digital signature for a given document with this voter&#39;s private key.</span>
@@ -511,7 +382,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0',
+            VERSION:'1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

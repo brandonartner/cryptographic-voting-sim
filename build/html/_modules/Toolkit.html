@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Toolkit &mdash; SecretSharingProject 0 documentation</title>
+  <title>Toolkit &mdash; S4 Voting System 1.0 documentation</title>
   
 
   
@@ -47,7 +47,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> SecretSharingProject
+            <a href="../index.html" class="icon icon-home"> S4 Voting System
           
 
           
@@ -57,7 +57,7 @@
             
             
               <div class="version">
-                0
+                1
               </div>
             
           
@@ -95,7 +95,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">SecretSharingProject</a>
+          <a href="../index.html">S4 Voting System</a>
         
       </nav>
 
@@ -146,6 +146,7 @@
   <h1>Source code for Toolkit</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">Crypto.Util</span> <span class="k">import</span> <span class="n">number</span>
+<span class="kn">from</span> <span class="nn">Crypto.Random</span> <span class="k">import</span> <span class="n">random</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">string</span>
 
@@ -177,59 +178,44 @@
 
         <span class="k">return</span> <span class="n">s</span></div>
 
-<div class="viewcode-block" id="prime_generator"><a class="viewcode-back" href="../index.html#Toolkit.prime_generator">[docs]</a><span class="k">def</span> <span class="nf">prime_generator</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Generates a random prime number</span>
-<span class="sd">    </span>
-<span class="sd">        lo: Low bound for searching</span>
-<span class="sd">        hi: High bound for searching</span>
-<span class="sd">        </span>
-<span class="sd">        Returns: Random prime within bounds</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="k">return</span> <span class="mi">1004137</span> <span class="c1"># totally random</span></div>
-    <span class="c1">#return number.getStrongPrime(prime_size,false_positive_prob=1e-10) # totally random (yes... yes it is)</span>
 
-<div class="viewcode-block" id="random_distinct"><a class="viewcode-back" href="../index.html#Toolkit.random_distinct">[docs]</a><span class="k">def</span> <span class="nf">random_distinct</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Used to get lists of distinct random numbers,</span>
+<div class="viewcode-block" id="random_distinct"><a class="viewcode-back" href="../index.html#Toolkit.random_distinct">[docs]</a><span class="k">def</span> <span class="nf">random_distinct</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates lists of distinct random numbers,</span>
 <span class="sd">    </span>
-<span class="sd">        lo: Low bound for searching</span>
-<span class="sd">        hi: High bound for searching</span>
-<span class="sd">        </span>
-<span class="sd">        Returns: Random numbers within bounds</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
+<span class="sd">    Args:</span>
+<span class="sd">        lower_bound (int): Low bound for searching.</span>
+<span class="sd">        upper_bound (int): High bound for searching.</span>
+<span class="sd">        size (int): Length of list of numbers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">         int: List of random numbers within given bounds.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">v</span> <span class="o">=</span> <span class="p">[]</span>
-    
+
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
-        <span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">rand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
             <span class="n">v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span>
             
     <span class="k">return</span> <span class="n">v</span></div>
 
-<span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
-    <span class="n">copy</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span> <span class="p">]</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">copy</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
-        
-    <span class="k">return</span> <span class="n">ys</span>
+<div class="viewcode-block" id="generate_polynomial"><a class="viewcode-back" href="../index.html#Toolkit.generate_polynomial">[docs]</a><span class="k">def</span> <span class="nf">generate_polynomial</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Makes a random polynomial with data as the coeficient term.</span>
 
-<div class="viewcode-block" id="generate_polynomial"><a class="viewcode-back" href="../index.html#Toolkit.generate_polynomial">[docs]</a><span class="k">def</span> <span class="nf">generate_polynomial</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Makes a random polynomial</span>
-<span class="sd">    </span>
-<span class="sd">        data: The data as a numeric value to be split</span>
-<span class="sd">        degree: The degree of the polynomial, and the minimum number of keys needed to decrypt</span>
-<span class="sd">        </span>
-<span class="sd">        Returns: polynomial as a function</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="c1"># will eventually give random primes greater than max{n, data}</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">prime_generator</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    
+<span class="sd">    Args:</span>
+<span class="sd">        data (int): The data as a numeric value to be split.</span>
+<span class="sd">        k (int): The number of points required to interpolate the polynomial, </span>
+<span class="sd">                    which is the polynomial&#39;s order plus one.</span>
+<span class="sd">        p (int): The prime modulus.</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        Polynomial: polynomial as a lambda function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Shamir&#39;s algorithms requires each coefficient to be distinct</span>
     <span class="n">coefficients</span> <span class="o">=</span> <span class="n">random_distinct</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1"># set data as 0th degree term</span>
@@ -237,31 +223,70 @@
 
     <span class="n">polynomial</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="n">polynomial</span><span class="p">,</span> <span class="n">p</span></div>
+    <span class="k">return</span> <span class="n">polynomial</span></div>
 
-<div class="viewcode-block" id="generate_keys"><a class="viewcode-back" href="../index.html#Toolkit.generate_keys">[docs]</a><span class="k">def</span> <span class="nf">generate_keys</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Creates the keys</span>
-<span class="sd">    </span>
-<span class="sd">        n: Number of keys to be created</span>
-<span class="sd">        poly: Polynomial function to create the keys</span>
-<span class="sd">        p: Prime number for modular arithmetic</span>
-<span class="sd">        </span>
-<span class="sd">        Returns: n 2-tuples of keys</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
+<div class="viewcode-block" id="generate_keys"><a class="viewcode-back" href="../index.html#Toolkit.generate_keys">[docs]</a><span class="k">def</span> <span class="nf">generate_keys</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates the keys for distributing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        poly (Polynomial): Polynomial function to create the keys.</span>
+<span class="sd">        n (int): </span>
+<span class="sd">        p (int): The prime modulus.</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        list of int tuples: list of key pairs generated by Shamir&#39;s Scheme.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># create distinct x values because f(a)=f(b) iff a=b </span>
-    <span class="c1"># implies less than n keys may be made</span>
+    <span class="c1"># implies less than n keys will be made</span>
     <span class="n">X</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    
+
     <span class="c1"># get corresponding y values</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
-    
+
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span></div>
 
-<span class="k">def</span> <span class="nf">find_congruence_with_divisibility</span><span class="p">(</span><span class="n">soln</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="nthOrderLag"><a class="viewcode-back" href="../index.html#Toolkit.nthOrderLag">[docs]</a><span class="k">def</span> <span class="nf">nthOrderLag</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the (n)th-ordered Lagrangian Interpolating Polynomial, evaluated at 0.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        n (int): The order of the next LIP.</span>
 
-    <span class="n">num</span> <span class="o">=</span> <span class="n">soln</span><span class="o">.</span><span class="n">numerator</span> <span class="o">%</span> <span class="n">p</span>
-    <span class="n">den</span> <span class="o">=</span> <span class="n">soln</span><span class="o">.</span><span class="n">denominator</span> <span class="o">%</span> <span class="n">p</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Fraction: A fraction containing the value of the nth LIP, evaluated at 0.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="n">y1</span><span class="o">-</span><span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">*</span><span class="n">y2</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">x1</span><span class="o">-</span><span class="n">x2</span>
+    <span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">den</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_divisible_congruency"><a class="viewcode-back" href="../index.html#Toolkit.find_divisible_congruency">[docs]</a><span class="k">def</span> <span class="nf">find_divisible_congruency</span><span class="p">(</span><span class="n">fraction</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates a congruent integer to the numerator that is divisible by the denominator.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fraction (Fraction): fraction, the fraction in question.</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        int: The z such that z = (num + i*prime)/den and z is an integer (without trunction).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Fracction class is used here because float division can&#39;t handle crypto-secure sized numbers,</span>
+    <span class="c1">#  but Fraction uses integers, which can handle effectively infinite numbers</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">fraction</span><span class="o">.</span><span class="n">numerator</span> <span class="o">%</span> <span class="n">p</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">fraction</span><span class="o">.</span><span class="n">denominator</span> <span class="o">%</span> <span class="n">p</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
@@ -270,51 +295,47 @@
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">den</span>
 
-    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="decrypt"><a class="viewcode-back" href="../index.html#Toolkit.decrypt">[docs]</a><span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Uses Lagrange interpolation to decrypt data</span>
-<span class="sd">    </span>
-<span class="sd">        keys: List of keys to use in the decryption</span>
-<span class="sd">        p: Prime number used to create finite field</span>
-<span class="sd">        </span>
-<span class="sd">        Returns: Decrypted data</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">keys</span><span class="p">)</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>   
-        <span class="n">product</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>      
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
-                <span class="k">continue</span>
-                
-            <span class="n">product</span> <span class="o">*=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<div class="viewcode-block" id="key_to_data"><a class="viewcode-back" href="../index.html#Toolkit.key_to_data">[docs]</a><span class="k">def</span> <span class="nf">key_to_data</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates a congruent integer to the numerator that is divisible by the denominator.</span>
 
-        <span class="n">value</span> <span class="o">+=</span> <span class="n">product</span>
-        
-    <span class="k">return</span> <span class="n">find_congruence_with_divisibility</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span></div>
+<span class="sd">    Args:</span>
+<span class="sd">        key (int, int): The key pair to be encoded.</span>
+<span class="sd">        n (int): The maximum number the first term in the key can be.</span>
 
-<span class="k">def</span> <span class="nf">key_to_data</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<span class="sd">    Returns: </span>
+<span class="sd">        int: data. The key pair encoded as an integer.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">key</span>
     
     <span class="n">xbin</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
     <span class="n">ybin</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">y</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
 
     <span class="c1"># This now pads to make the first number the same bit length of the prime</span>
-    <span class="n">databin</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span> <span class="o">+</span><span class="n">xbin</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]))</span> <span class="o">+</span> <span class="n">ybin</span>
+    <span class="n">databin</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span> <span class="o">+</span><span class="n">xbin</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]))</span> <span class="o">+</span> <span class="n">ybin</span>
     <span class="n">data</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">databin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
-<span class="k">def</span> <span class="nf">data_to_key</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="data_to_key"><a class="viewcode-back" href="../index.html#Toolkit.data_to_key">[docs]</a><span class="k">def</span> <span class="nf">data_to_key</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates a congruent integer to the numerator that is divisible by the denominator.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (int): .</span>
+<span class="sd">        n (int): The maximum number the first term in the key can be.</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        (int, int): key. The key pair from the given encoded integer.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">databin</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
     <span class="n">prime_bit_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">2</span><span class="p">:])</span>
 
     <span class="n">xbin</span> <span class="o">=</span> <span class="n">databin</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">prime_bit_len</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1">#xbin = databin[:len(databin)/2]</span>
     <span class="n">ybin</span> <span class="o">=</span> <span class="n">databin</span><span class="p">[</span><span class="n">prime_bit_len</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="o">+</span><span class="n">xbin</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -322,7 +343,7 @@
 
     <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">key</span></div>
 
 <div class="viewcode-block" id="next_multiple_of_128"><a class="viewcode-back" href="../index.html#Toolkit.next_multiple_of_128">[docs]</a><span class="k">def</span> <span class="nf">next_multiple_of_128</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Calculates the smallest number of bits bigger than the length of data and a multiple of 128.</span>
@@ -332,8 +353,11 @@
     <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">bin_data_len</span><span class="o">/</span><span class="mi">128</span><span class="p">)</span><span class="o">*</span><span class="mi">128</span></div>
 
 <div class="viewcode-block" id="convvert_to_PEM"><a class="viewcode-back" href="../index.html#Toolkit.convvert_to_PEM">[docs]</a><span class="k">def</span> <span class="nf">convvert_to_PEM</span><span class="p">(</span><span class="n">private_key</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Converts a private key integer to PEM format</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot; Converts a private key integer to PEM format</span>
+
+<span class="sd">    Todo:</span>
+<span class="sd">        Implement this... Maybe... This may be needed for making document sets on lower levels of the hierarchy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">base64_key</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 <span class="k">def</span> <span class="nf">base_convert</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
@@ -345,6 +369,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">base_convert</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="n">base</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span> <span class="o">+</span> <span class="n">digits</span><span class="p">[</span><span class="n">n</span><span class="o">%</span><span class="n">base</span><span class="p">]</span>
         
+
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">SlowNeville</span> <span class="k">import</span> <span class="n">SlowNeville</span>
 
@@ -404,7 +430,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0',
+            VERSION:'1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
