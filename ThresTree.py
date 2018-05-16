@@ -171,7 +171,7 @@ class TreeNode:
                 self.parent.current_vote = None
                 self.parent.already_voted = []
         else:
-            print('{} tried to vote to sign {}, but {} is being voted on.'.format(self.addr,doc,self.current_vote))
+            print('{} tried to vote to sign {}, but {} is being voted on.'.format(self.addr,doc,self.parent.current_vote))
 
 
     def show_documents(self, verified_only=False):
