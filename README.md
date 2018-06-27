@@ -9,7 +9,7 @@ this is not a secure system.<br/>
 
 ## Documentation
 
-[For detailed documentation of the project.](https://htmlpreview.github.com/brandonartner/SecretSharingProject/blob/master/build/html/index.html)
+[For detailed documentation of the project.](http://htmlpreview.github.io/?https://github.com/brandonartner/SecretSharingProject/blob/master/build/html/index.html)
 
 ## Required Libraries:
 ```
