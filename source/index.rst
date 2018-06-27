@@ -7,9 +7,6 @@
 Secret Sharing Capstone
 =======================
 
-* :ref:`genindex`
-* :ref:`modindex`
-
 .. automodule:: ThresTree
    :members:
    
