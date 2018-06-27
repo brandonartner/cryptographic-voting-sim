@@ -1,5 +1,9 @@
-# SecretSharingProject
-Project to implement a secret sharing application.<br/>
+# Cryptographic Voting System
+A terminal application that use cryptographic principles to facilitate simulated secure voting in 
+segmentated organizations. The system allows for designing simple to complex organizational structures 
+and generating secure votes tied to each member. There is also functionality to simulate a voting 
+session, where users can intiate a vote and vote on the active vote. When a vote is succesful the 
+document gains a digital signature, which can be verified later.<br/>
 <br/>
 
 ## Required Libraries:
