@@ -3,8 +3,13 @@ A terminal application that use cryptographic principles to facilitate simulated
 segmentated organizations. The system allows for designing simple to complex organizational structures 
 and generating secure votes tied to each member. There is also functionality to simulate a voting 
 session, where users can intiate a vote and vote on the active vote. When a vote is succesful the 
-document gains a digital signature, which can be verified later.<br/>
+document gains a digital signature, which can be verified later. Disclaimer: In its current state
+this is not a secure system.<br/>
 <br/>
+
+## Documentation
+
+[For detailed documentation of the project.](https://github.com/brandonartner/SecretSharingProject/blob/master/build/html/index.html)
 
 ## Required Libraries:
 ```
